@@ -3,18 +3,24 @@ using System.Linq;
 
 public class Inventory : IMatrix
 {
-    private Dictionary<Pair, Item> _items = new();
+    private Dictionary<Item, Pair> _items = new();
 
     private Matrix _cells;
+    public Pair Shape { get { return _cells.Shape; } }
 
     public Inventory(Pair shape)
     {
         _cells = new Matrix(shape);
     }
 
+    public bool ContainsItem(Item item)
+    {
+        return _items.Keys.Contains(item);
+    }
+
     public bool TryAddItem(Item item, Pair pos)
     {
-        if (_items.Values.Contains(item))
+        if (ContainsItem(item))
             return false;
 
         bool isItemInBorder = item.ToMatrix().Reshape(_cells.Shape, out Matrix itemMatrix, pos.Row, pos.Col);
@@ -25,8 +31,22 @@ public class Inventory : IMatrix
         if (newCells.Max() > (int)CellType.FILL)
             return false;
 
-        _items.Add(pos, item);
+        _items.Add(item, pos);
         _cells = newCells;
+        return true;
+    }
+
+    public bool TryExtractItem(Item item, out Pair pos)
+    {
+        pos = new Pair(-1, -1);
+
+        if (!ContainsItem(item))
+            return false;
+
+        pos = _items[item];
+        item.ToMatrix().Reshape(_cells.Shape, out Matrix itemMatrix, pos.Row, pos.Col);
+        _cells = _cells.Substract(itemMatrix);
+        _items.Remove(item);
         return true;
     }
 

@@ -42,6 +42,20 @@ public class Matrix : ICloneable
         return result;
     }
 
+    public Matrix Substract(Matrix other)
+    {
+        Matrix negativeOther = other.Clone() as Matrix;
+        for (int i = 0; i < this.Shape.Row; i++)
+        {
+            for (int j = 0; j < this.Shape.Col; j++)
+            {
+                negativeOther[i, j] *= -1;
+            }
+        }
+
+        return this.Add(negativeOther);
+    }
+
     public bool Reshape(Pair newShape, out Matrix result, int OffestRow = 0, int OffsetCol = 0)
     {
         result = new Matrix(newShape);
