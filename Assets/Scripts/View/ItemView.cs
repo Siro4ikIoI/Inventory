@@ -7,7 +7,7 @@ public class ItemView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 {
     public event Action<ItemView, Vector2> ItemDropped;
 
-    public Guid Id { get; private set; }
+    public int Id { get; private set; }
 
     [SerializeField] private Image iconImage;
     [SerializeField] private Text nameText;
@@ -23,23 +23,9 @@ public class ItemView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     }
 
     // Инициализация итема данными
-    public void Initialize(ItemData itemData)
+    public void Initialize(int id)
     {
-        Id = itemData.Id;
-
-        if (nameText != null)
-        {
-            nameText.text = itemData.Name;
-        }
-
-        if (iconImage != null && itemData.Icon != null)
-        {
-            iconImage.sprite = itemData.Icon;
-        }
-
-        // Устанавливаем начальную позицию
-        SetPosition(itemData.Position);
-        originalPosition = itemData.Position;
+        Id = id;
     }
 
     // Установка позиции итема
@@ -63,7 +49,7 @@ public class ItemView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        // Сохраняем исходную позицию при начале перетаскивания
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
         originalPosition = rectTransform.anchoredPosition;
     }
 
