@@ -15,6 +15,7 @@ public class ItemView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     private RectTransform rectTransform;
     private Vector2 originalPosition;
     private Canvas canvas;
+    private Transform originParent;
 
     void Awake()
     {
@@ -35,6 +36,7 @@ public class ItemView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         {
             rectTransform.anchoredPosition = position;
             originalPosition = position;
+            originParent = transform.parent;
         }
     }
 
@@ -43,14 +45,16 @@ public class ItemView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     {
         if (rectTransform != null)
         {
+            transform.SetParent(originParent);
             rectTransform.anchoredPosition = originalPosition;
         }
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        // ��������� �������� ������� ��� ������ ��������������
+        originParent = transform.parent;
         originalPosition = rectTransform.anchoredPosition;
+        transform.SetParent(canvas.transform);
     }
 
     public void OnDrag(PointerEventData eventData)
