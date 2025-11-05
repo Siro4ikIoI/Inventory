@@ -18,6 +18,8 @@ public class Inventory : IMatrix
         return _items.Keys.Contains(item);
     }
 
+    // TODO Метод проверки на пустоту через _item.Length
+     
     public bool TryAddItem(Item item, Pair pos)
     {
         if (ContainsItem(item))

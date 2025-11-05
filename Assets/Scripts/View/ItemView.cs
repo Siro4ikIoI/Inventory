@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class ItemView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public event Action<ItemView, Vector2> ItemDropped;
+    // TODO Добавить новое событие для смены положения предмета при перетаскивании
 
     public int Id { get; private set; }
 
@@ -63,6 +64,7 @@ public class ItemView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         if (rectTransform != null && canvas != null)
         {
             rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
+            // TODO Испускать ивент
         }
     }
 

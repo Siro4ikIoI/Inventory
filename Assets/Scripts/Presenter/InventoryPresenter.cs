@@ -33,6 +33,9 @@ public class InventoryPresenter
             oldInventory.TryAddItem(item, oldPosition);
             return false;
         }
+
+        // TODO проверка на пустоту кейса и генераци€ в случае если он пуст
+
         return true;
     }
 
@@ -47,6 +50,7 @@ public class InventoryPresenter
         GenerationPlug(itemSettings, positions);
     }
 
+    // TODO «аменить заглушку на метод генерации
     private void GenerationPlug(ItemSettings itemSettings, Pair[] positions)
     {
         int id = 1;
@@ -59,4 +63,8 @@ public class InventoryPresenter
             id++;
         }
     }
+
+    // TODO ћетод дл€ определени€ набора генерируемых предметов
+
+    // TODO ћетод обработки перемещени€ предмета
 }

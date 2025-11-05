@@ -77,6 +77,8 @@ public class Matrix : ICloneable
         return true;
     }
 
+    // TODO Метод выделения подматрицы
+
     public int Max()
     {
         return _matrix.Cast<int>().Max();

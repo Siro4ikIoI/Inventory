@@ -93,6 +93,8 @@ public class CanvasView : MonoBehaviour
         }
     }
 
+    // TODO Метод обработки переноса предмета
+
     private void OnDestroy()
     {
         // Отписываемся от событий
