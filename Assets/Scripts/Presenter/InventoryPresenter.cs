@@ -7,8 +7,8 @@ public class InventoryPresenter
     private Dictionary<int, Item> _items = new();
     private CanvasView _canvas;
 
-    private Inventory _draggedItemInventory = null;
-    private Pair _draggedItemPosition;
+    private Inventory _previousItemInventory = null;
+    private Pair _previousItemPosition;
 
     public InventoryPresenter(CanvasView canvas)
     {
@@ -36,8 +36,8 @@ public class InventoryPresenter
 
         if (sourceInventory.TryExtractItem(item, out Pair position))
         {
-            _draggedItemInventory = sourceInventory;
-            _draggedItemPosition = position;
+            _previousItemInventory = sourceInventory;
+            _previousItemPosition = position;
         }
     }
 
@@ -47,11 +47,11 @@ public class InventoryPresenter
         Inventory newInventory = _inventories[inventoryType];
         if (!newInventory.TryAddItem(item, new Pair(row, col)))
         {
-            _draggedItemInventory.TryAddItem(item, _draggedItemPosition);
-            _draggedItemInventory = null;
+            _previousItemInventory.TryAddItem(item, _previousItemPosition);
+            _previousItemInventory = null;
             return false;
         }
-        _draggedItemInventory = null;
+        _previousItemInventory = null;
         return true;
     }
 
