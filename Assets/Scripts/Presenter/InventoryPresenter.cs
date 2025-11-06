@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class InventoryPresenter
 {
     private Dictionary<InventoryType, Inventory> _inventories = new();
     private Dictionary<int, Item> _items = new();
     private CanvasView _canvas;
+    private ItemSO _itemSO;
 
     public InventoryPresenter(CanvasView canvas)
     {
@@ -34,37 +36,82 @@ public class InventoryPresenter
             return false;
         }
 
-        // TODO проверка на пустоту кейса и генераци€ в случае если он пуст
+        if (oldInventory.IsEmpty() && inventoryType == InventoryType.INVENTARY)
+        {
+            GenerationObjects(3);
+        }
 
         return true;
     }
 
     public void Initialize(ItemSO itemSO)
     {
-        ItemSettings itemSettings = itemSO.items[0];
-        Pair[] positions =
-        {
-            new Pair(0, 0), new Pair(0, 2), new Pair(2, 0)
-        };
-
-        GenerationPlug(itemSettings, positions);
+        _itemSO = itemSO;
+        GenerationObjects(3);
     }
 
-    // TODO «аменить заглушку на метод генерации
-    private void GenerationPlug(ItemSettings itemSettings, Pair[] positions)
+    private void GenerationObjects(int count)
     {
-        int id = 1;
-        foreach (var pos in positions)
+        Inventory inventory = _inventories[InventoryType.INVENTARY];
+
+        Matrix workingMatrix = (Matrix)inventory.ToMatrix().Clone();
+
+        for (int i = 0; i < count; i++)
         {
-            Item item = new Item(id, itemSettings.GetStructure());
-            _items.Add(id, item);
-            _inventories[InventoryType.CASE].TryAddItem(item, pos);
-            _canvas.SpawnItem(id, itemSettings.item, pos.Row, pos.Col);
-            id++;
+            bool placed = false;
+            Pair pos = new Pair(i * 2, 0);
+
+            List<ItemSettings> items = _itemSO.items.OrderBy(_ => Random.value).ToList();
+
+            int attempt = 0;
+            while (attempt < items.Count && !placed)
+            {
+                var itemSettings = items[attempt];
+                int id = _items.Count > 0 ? _items.Keys.Max() + 1 : 0;
+                var item = new Item(id, itemSettings.GetStructure());
+
+                if (TryFindFreePosition(item, workingMatrix, out var actualPos))
+                {
+                    _items.Add(item.Id, item);
+                    _inventories[InventoryType.CASE].TryAddItem(item, pos);
+                    _canvas.SpawnItem(item.Id, itemSettings.item, pos.Row, pos.Col);
+
+                    item.ToMatrix().Reshape(workingMatrix.Shape, out var itemMatrix, actualPos.Row, actualPos.Col);
+                    workingMatrix = workingMatrix.Add(itemMatrix);
+
+                    placed = true;
+                }
+                else
+                {
+                    items.RemoveAt(attempt);
+                    continue;
+                }
+
+                attempt++;
+            }
         }
     }
 
-    // TODO ћетод дл€ определени€ набора генерируемых предметов
+    private bool TryFindFreePosition(Item item, Matrix inventory, out Pair foundPos)
+    {
+        foundPos = new Pair(0, 0);
 
-    // TODO ћетод обработки перемещени€ предмета
+        for (int row = 0; row < inventory.Shape.Row; row++)
+        {
+            for (int col = 0; col < inventory.Shape.Col; col++)
+            {
+                bool inBounds = item.ToMatrix().Reshape(inventory.Shape, out Matrix itemMatrix, row, col);
+                if (!inBounds)
+                    continue;
+
+                Matrix newCells = inventory.Add(itemMatrix);
+                if (newCells.Max() <= (int)CellType.FILL)
+                {
+                    foundPos = new Pair(row, col);
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
