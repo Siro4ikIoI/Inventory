@@ -135,11 +135,11 @@ public class CanvasView : MonoBehaviour
         ResetAllHighlights();
     }
 
-    public void HighlightInventoryCells(InventoryType inventoryType, Matrix highlightMatrix)
+    public void HighlightInventoryCells(InventoryType inventoryType, int[,] highlightArray)
     {
         if (inventories.ContainsKey(inventoryType))
         {
-            inventories[inventoryType].HighlightCells(highlightMatrix);
+            inventories[inventoryType].HighlightCells(highlightArray);
         }
     }
 

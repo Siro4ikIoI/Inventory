@@ -88,7 +88,7 @@ public class InventoryView : MonoBehaviour
         return b;
     }
 
-    public void HighlightCells(Matrix highlightMatrix)
+    public void HighlightCells(int[,] highlightArray)
     {
         if (cells == null) return;
 
@@ -96,9 +96,9 @@ public class InventoryView : MonoBehaviour
         {
             for (int j = 0; j < Col; j++)
             {
-                if (cells[i, j] != null && highlightMatrix != null)
+                if (cells[i, j] != null && highlightArray != null)
                 {
-                    int state = highlightMatrix[i, j];
+                    int state = highlightArray[i, j];
                     cells[i, j].SetHighlight(state);
                 }
             }

@@ -77,9 +77,9 @@ public class Matrix : ICloneable
         return true;
     }
 
-    public Matrix GetSubmatrix(Pair subShape, int offsetRow, int offsetCol)
+    public bool GetSubmatrix(Pair subShape, int offsetRow, int offsetCol, out Matrix result)
     {
-        Matrix result = new Matrix(subShape);
+        result = new Matrix(subShape);
 
         for (int i = 0; i < subShape.Row; i++)
         {
@@ -88,19 +88,17 @@ public class Matrix : ICloneable
                 int sourceRow = i + offsetRow;
                 int sourceCol = j + offsetCol;
 
-                if (sourceRow >= 0 && sourceRow < this.Shape.Row &&
-                    sourceCol >= 0 && sourceCol < this.Shape.Col)
+                if (sourceRow < 0 || sourceRow >= this.Shape.Row ||
+                    sourceCol < 0 || sourceCol >= this.Shape.Col)
                 {
-                    result[i, j] = this[sourceRow, sourceCol];
+                    return false;
                 }
-                else
-                {
-                    result[i, j] = 0;
-                }
+
+                result[i, j] = this[sourceRow, sourceCol];
             }
         }
 
-        return result;
+        return true;
     }
 
     public int Max()

@@ -66,77 +66,31 @@ public class InventoryPresenter
         Matrix itemMatrix = item.ToMatrix();
         Pair inventoryShape = targetInventory.Shape;
 
-        // Выделяем подматрицу из инвентаря
-        Matrix submatrix = targetInventory.ToMatrix().GetSubmatrix(itemMatrix.Shape, row, col);
+        bool isInBounds = targetInventory.ToMatrix().GetSubmatrix(itemMatrix.Shape, row, col, out Matrix submatrix);
 
-        // Складываем матрицу предмета с подматрицей
+        if (!isInBounds)
+        {
+            int[,] emptyArray = new int[inventoryShape.Row, inventoryShape.Col];
+            _canvas.HighlightInventoryCells(inventoryType, emptyArray);
+            return;
+        }
+
         Matrix sumMatrix = itemMatrix.Add(submatrix);
 
-        // Создаём массив для подсветки
+        sumMatrix.Reshape(inventoryShape, out Matrix highlightMatrix, row, col);
+
+        // Конвертируем в массив и передаём во View
         int[,] highlightArray = new int[inventoryShape.Row, inventoryShape.Col];
-
-        // Проверяем, входит ли предмет в границы
-        bool isInBounds = itemMatrix.Reshape(inventoryShape, out Matrix reshapedItemMatrix, row, col);
-
-        // Заполняем массив подсветки
         for (int i = 0; i < inventoryShape.Row; i++)
         {
             for (int j = 0; j < inventoryShape.Col; j++)
             {
-                if (reshapedItemMatrix[i, j] == 0)
-                {
-                    // Ячейка не затронута предметом
-                    highlightArray[i, j] = 0;
-                }
-                else
-                {
-                    // Вычисляем локальную позицию в матрице суммы
-                    int localRow = i - row;
-                    int localCol = j - col;
-
-                    if (localRow >= 0 && localRow < sumMatrix.Shape.Row &&
-                        localCol >= 0 && localCol < sumMatrix.Shape.Col)
-                    {
-                        int sumValue = sumMatrix[localRow, localCol];
-
-                        if (sumValue == 1)
-                        {
-                            // Можно разместить (зелёный)
-                            highlightArray[i, j] = 1;
-                        }
-                        else if (sumValue >= 2)
-                        {
-                            // Конфликт (красный)
-                            highlightArray[i, j] = 2;
-                        }
-                    }
-                    else
-                    {
-                        // Выход за границы (красный)
-                        highlightArray[i, j] = 2;
-                    }
-                }
+                int value = highlightMatrix[i, j];                
+                highlightArray[i, j] = value;
             }
         }
 
-        // Если предмет выходит за границы, все его ячейки красные
-        if (!isInBounds)
-        {
-            for (int i = 0; i < inventoryShape.Row; i++)
-            {
-                for (int j = 0; j < inventoryShape.Col; j++)
-                {
-                    if (reshapedItemMatrix[i, j] != 0)
-                    {
-                        highlightArray[i, j] = 2;
-                    }
-                }
-            }
-        }
-
-        // Конвертируем в Matrix и передаём во View
-        Matrix highlightMatrix = new Matrix(highlightArray);
-        _canvas.HighlightInventoryCells(inventoryType, highlightMatrix);
+        _canvas.HighlightInventoryCells(inventoryType, highlightArray);
     }
 
     public void Initialize(ItemSO itemSO)
