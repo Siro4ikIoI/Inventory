@@ -10,6 +10,7 @@ public class InventoryView : MonoBehaviour
     private RectTransform rectTransform;
     public int Row { get; private set; }
     public int Col { get; private set; }
+    private CellView[,] cells;
 
     void Awake()
     {
@@ -24,6 +25,27 @@ public class InventoryView : MonoBehaviour
     {
         Row = row;
         Col = col;
+        InitializeCells();
+    }
+
+    private void InitializeCells()
+    {
+        cells = new CellView[Row, Col];
+
+        CellView[] existingCells = inventoryArea.GetComponentsInChildren<CellView>();
+
+        int index = 0;
+        for (int i = 0; i < Row; i++)
+        {
+            for (int j = 0; j < Col; j++)
+            {
+                if (index < existingCells.Length)
+                {
+                    cells[i, j] = existingCells[index];
+                    index++;
+                }
+            }
+        }
     }
 
     // Проверяет, находится ли точка внутри области инвентаря
@@ -64,6 +86,39 @@ public class InventoryView : MonoBehaviour
         localPosition = new Vector2(colIndex, rowIndex);
 
         return b;
+    }
+
+    public void HighlightCells(Matrix highlightMatrix)
+    {
+        if (cells == null) return;
+
+        for (int i = 0; i < Row; i++)
+        {
+            for (int j = 0; j < Col; j++)
+            {
+                if (cells[i, j] != null && highlightMatrix != null)
+                {
+                    int state = highlightMatrix[i, j];
+                    cells[i, j].SetHighlight(state);
+                }
+            }
+        }
+    }
+
+    public void ResetHighlight()
+    {
+        if (cells == null) return;
+
+        for (int i = 0; i < Row; i++)
+        {
+            for (int j = 0; j < Col; j++)
+            {
+                if (cells[i, j] != null)
+                {
+                    cells[i, j].ResetHighlight();
+                }
+            }
+        }
     }
 
     public RectTransform GetContainer()

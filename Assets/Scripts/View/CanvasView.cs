@@ -6,6 +6,8 @@ public class CanvasView : MonoBehaviour
 {
     // События для взаимодействия с презентером
     public event Func<int, InventoryType, int, int, bool> ItemDroped;
+    public event Action<int, InventoryType, int, int> ItemDragPositionChanged;
+    public event Action<int> ItemBeginDrag;
 
     [SerializeField] private InventoryView inventoryView;
     [SerializeField] private InventoryView caseView;
@@ -41,9 +43,47 @@ public class CanvasView : MonoBehaviour
 
         itemView.Initialize(id);
         itemView.SetPosition(localPosition);
+        itemView.ItemBeginDrag += OnItemBeginDrag;
         itemView.ItemDropped += OnItemDropped;
+        itemView.ItemDragging += OnItemDragging;
         spawnedItems[id] = itemView;
         itemContainers[id] = @case;       
+    }
+
+    private void OnItemBeginDrag(ItemView item)
+    {
+        ResetAllHighlights();
+        ItemBeginDrag?.Invoke(item.Id);
+    }
+
+    private void OnItemDragging(ItemView item, Vector2 screenPosition)
+    {
+        InventoryType targetInventoryType = InventoryType.CASE;
+        InventoryView targetInventory = null;
+        Vector2 tablePosition = Vector2.zero;
+
+        foreach (var inventoryPair in inventories)
+        {
+            if (inventoryPair.Value.IsPointInside(screenPosition))
+            {
+                inventoryPair.Value.GetTablePosition(screenPosition, out tablePosition);
+                targetInventory = inventoryPair.Value;
+                targetInventoryType = inventoryPair.Key;
+                break;
+            }
+        }
+
+        if (targetInventory != null)
+        {
+            int col = (int)tablePosition.x;
+            int row = (int)Math.Abs(tablePosition.y - targetInventory.Row + 1);
+
+            ItemDragPositionChanged?.Invoke(item.Id, targetInventoryType, row, col);
+        }
+        else
+        {
+            ResetAllHighlights();
+        }
     }
 
     // Обработчик события drop от ItemView
@@ -91,9 +131,25 @@ public class CanvasView : MonoBehaviour
             // Возвращаем на исходную позицию
             item.ResetPosition();
         }
+
+        ResetAllHighlights();
     }
 
-    // TODO Метод обработки переноса предмета
+    public void HighlightInventoryCells(InventoryType inventoryType, Matrix highlightMatrix)
+    {
+        if (inventories.ContainsKey(inventoryType))
+        {
+            inventories[inventoryType].HighlightCells(highlightMatrix);
+        }
+    }
+
+    public void ResetAllHighlights()
+    {
+        foreach (var inventory in inventories.Values)
+        {
+            inventory.ResetHighlight();
+        }
+    }
 
     private void OnDestroy()
     {
@@ -102,7 +158,9 @@ public class CanvasView : MonoBehaviour
         {
             if (item != null)
             {
+                item.ItemBeginDrag -= OnItemBeginDrag;
                 item.ItemDropped -= OnItemDropped;
+                item.ItemDragging -= OnItemDragging;
             }
         }
     }

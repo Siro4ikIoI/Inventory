@@ -5,8 +5,9 @@ using UnityEngine.UI;
 
 public class ItemView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
+    public event Action<ItemView> ItemBeginDrag;
+    public event Action<ItemView, Vector2> ItemDragging;    
     public event Action<ItemView, Vector2> ItemDropped;
-    // TODO Добавить новое событие для смены положения предмета при перетаскивании
 
     public int Id { get; private set; }
 
@@ -56,15 +57,15 @@ public class ItemView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         originParent = transform.parent;
         originalPosition = rectTransform.anchoredPosition;
         transform.SetParent(canvas.transform);
+        ItemBeginDrag?.Invoke(this);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        // Перемещаем объект за курсором
         if (rectTransform != null && canvas != null)
         {
             rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
-            // TODO Испускать ивент
+            ItemDragging?.Invoke(this, transform.position);
         }
     }
 

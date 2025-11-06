@@ -7,6 +7,9 @@ public class InventoryPresenter
     private Dictionary<int, Item> _items = new();
     private CanvasView _canvas;
 
+    private Inventory _draggedItemInventory = null;
+    private Pair _draggedItemPosition;
+
     public InventoryPresenter(CanvasView canvas)
     {
         _inventories.Add(InventoryType.CASE, new Inventory(new Pair(7, 4)));
@@ -19,24 +22,121 @@ public class InventoryPresenter
         }
 
         _canvas.ItemDroped += OnItemDroped;
+        _canvas.ItemDragPositionChanged += OnItemDragPositionChanged;
+        _canvas.ItemBeginDrag += OnItemBeginDrag;
+    }
+
+    private void OnItemBeginDrag(int itemId)
+    {
+        if (!_items.ContainsKey(itemId))
+            return;
+
+        Item item = _items[itemId];
+        Inventory sourceInventory = _inventories.First(i => i.Value.ContainsItem(item)).Value;
+
+        if (sourceInventory.TryExtractItem(item, out Pair position))
+        {
+            _draggedItemInventory = sourceInventory;
+            _draggedItemPosition = position;
+        }
     }
 
     private bool OnItemDroped(int itemId, InventoryType inventoryType, int row, int col)
     {
         Item item = _items[itemId];
-        Inventory oldInventory = _inventories.First(i => i.Value.ContainsItem(item)).Value;
-        oldInventory.TryExtractItem(item, out Pair oldPosition);
-
         Inventory newInventory = _inventories[inventoryType];
         if (!newInventory.TryAddItem(item, new Pair(row, col)))
         {
-            oldInventory.TryAddItem(item, oldPosition);
+            _draggedItemInventory.TryAddItem(item, _draggedItemPosition);
+            _draggedItemInventory = null;
             return false;
         }
-
-        // TODO проверка на пустоту кейса и генерация в случае если он пуст
-
+        _draggedItemInventory = null;
         return true;
+    }
+
+    private void OnItemDragPositionChanged(int itemId, InventoryType inventoryType, int row, int col)
+    {
+        if (!_items.ContainsKey(itemId))
+            return;
+
+        Item item = _items[itemId];
+        Inventory targetInventory = _inventories[inventoryType];
+
+        Matrix itemMatrix = item.ToMatrix();
+        Pair inventoryShape = targetInventory.Shape;
+
+        // Выделяем подматрицу из инвентаря
+        Matrix submatrix = targetInventory.ToMatrix().GetSubmatrix(itemMatrix.Shape, row, col);
+
+        // Складываем матрицу предмета с подматрицей
+        Matrix sumMatrix = itemMatrix.Add(submatrix);
+
+        // Создаём массив для подсветки
+        int[,] highlightArray = new int[inventoryShape.Row, inventoryShape.Col];
+
+        // Проверяем, входит ли предмет в границы
+        bool isInBounds = itemMatrix.Reshape(inventoryShape, out Matrix reshapedItemMatrix, row, col);
+
+        // Заполняем массив подсветки
+        for (int i = 0; i < inventoryShape.Row; i++)
+        {
+            for (int j = 0; j < inventoryShape.Col; j++)
+            {
+                if (reshapedItemMatrix[i, j] == 0)
+                {
+                    // Ячейка не затронута предметом
+                    highlightArray[i, j] = 0;
+                }
+                else
+                {
+                    // Вычисляем локальную позицию в матрице суммы
+                    int localRow = i - row;
+                    int localCol = j - col;
+
+                    if (localRow >= 0 && localRow < sumMatrix.Shape.Row &&
+                        localCol >= 0 && localCol < sumMatrix.Shape.Col)
+                    {
+                        int sumValue = sumMatrix[localRow, localCol];
+
+                        if (sumValue == 1)
+                        {
+                            // Можно разместить (зелёный)
+                            highlightArray[i, j] = 1;
+                        }
+                        else if (sumValue >= 2)
+                        {
+                            // Конфликт (красный)
+                            highlightArray[i, j] = 2;
+                        }
+                    }
+                    else
+                    {
+                        // Выход за границы (красный)
+                        highlightArray[i, j] = 2;
+                    }
+                }
+            }
+        }
+
+        // Если предмет выходит за границы, все его ячейки красные
+        if (!isInBounds)
+        {
+            for (int i = 0; i < inventoryShape.Row; i++)
+            {
+                for (int j = 0; j < inventoryShape.Col; j++)
+                {
+                    if (reshapedItemMatrix[i, j] != 0)
+                    {
+                        highlightArray[i, j] = 2;
+                    }
+                }
+            }
+        }
+
+        // Конвертируем в Matrix и передаём во View
+        Matrix highlightMatrix = new Matrix(highlightArray);
+        _canvas.HighlightInventoryCells(inventoryType, highlightMatrix);
     }
 
     public void Initialize(ItemSO itemSO)
@@ -49,8 +149,7 @@ public class InventoryPresenter
 
         GenerationPlug(itemSettings, positions);
     }
-
-    // TODO Заменить заглушку на метод генерации
+    
     private void GenerationPlug(ItemSettings itemSettings, Pair[] positions)
     {
         int id = 1;
@@ -63,8 +162,4 @@ public class InventoryPresenter
             id++;
         }
     }
-
-    // TODO Метод для определения набора генерируемых предметов
-
-    // TODO Метод обработки перемещения предмета
 }

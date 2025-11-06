@@ -77,7 +77,31 @@ public class Matrix : ICloneable
         return true;
     }
 
-    // TODO Метод выделения подматрицы
+    public Matrix GetSubmatrix(Pair subShape, int offsetRow, int offsetCol)
+    {
+        Matrix result = new Matrix(subShape);
+
+        for (int i = 0; i < subShape.Row; i++)
+        {
+            for (int j = 0; j < subShape.Col; j++)
+            {
+                int sourceRow = i + offsetRow;
+                int sourceCol = j + offsetCol;
+
+                if (sourceRow >= 0 && sourceRow < this.Shape.Row &&
+                    sourceCol >= 0 && sourceCol < this.Shape.Col)
+                {
+                    result[i, j] = this[sourceRow, sourceCol];
+                }
+                else
+                {
+                    result[i, j] = 0;
+                }
+            }
+        }
+
+        return result;
+    }
 
     public int Max()
     {
