@@ -14,6 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   items:
   - itemID: 0
-    item: {fileID: 2601718709323262765, guid: bd5d45c8a57290948a019969985c087f, type: 3}
+    item: {fileID: 2601718709323262765, guid: 64580ca334641cf4a9bb017e0d588162, type: 3}
     block:
     - block_m: 01000000
+  - itemID: 1
+    item: {fileID: 2601718709323262765, guid: b3954200123c57042ad60e0454c63e26, type: 3}
+    block:
+    - block_m: 01000000
+    - block_m: 01000000
+  - itemID: 2
+    item: {fileID: 2601718709323262765, guid: 250154e417532db4b82d937f4b57bf3a, type: 3}
+    block:
+    - block_m: 010000000100000001000000
+  - itemID: 3
+    item: {fileID: 2601718709323262765, guid: 24d4617bf709a0d4abe376cf4880a362, type: 3}
+    block:
+    - block_m: 0100000001000000
+    - block_m: 0100000001000000
+  - itemID: 4
+    item: {fileID: 2601718709323262765, guid: 6e6ad60e2f1f97a47820139125b4ca9a, type: 3}
+    block:
+    - block_m: 0000000001000000
+    - block_m: 0100000001000000
