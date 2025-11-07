@@ -89,7 +89,7 @@ public class CanvasView : MonoBehaviour
     // Обработчик события drop от ItemView
     private void OnItemDropped(ItemView item, Vector2 screenPosition)
     {
-        InventoryType newContainerType = InventoryType.CASE;
+        InventoryType newContainerType = InventoryType.NONE;
         InventoryView newContainer = null;
         Vector2 tablePosition = Vector2.zero;
 
@@ -104,15 +104,13 @@ public class CanvasView : MonoBehaviour
             }
         }
 
-        // Если итем не попал ни в одну область, возвращаем на исходную позицию
-        if (newContainer == null)
-        {
-            item.ResetPosition();
-            return;
-        }
+        int row = -1, col = -1;
 
-        int col = (int)tablePosition.x;
-        int row = (int)Math.Abs(tablePosition.y - newContainer.Row + 1);
+        if (newContainerType != InventoryType.NONE)
+        {
+            col = (int)tablePosition.x;
+            row = (int)Math.Abs(tablePosition.y - newContainer.Row + 1);
+        }
 
         // Запрашиваем у презентера разрешение на размещение
         bool canPlace = ItemDroped?.Invoke(item.Id, newContainerType, row, col) ?? false;

@@ -46,8 +46,7 @@ public class InventoryPresenter
     private bool OnItemDroped(int itemId, InventoryType inventoryType, int row, int col)
     {
         Item item = _items[itemId];
-        Inventory newInventory = _inventories[inventoryType];
-        if (!newInventory.TryAddItem(item, new Pair(row, col)))
+        if (inventoryType == InventoryType.NONE || !_inventories[inventoryType].TryAddItem(item, new Pair(row, col)))
         {
             _previousItemInventory.TryAddItem(item, _previousItemPosition);
             _previousItemInventory = null;
