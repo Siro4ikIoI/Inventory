@@ -83,8 +83,19 @@ public class InventoryPresenter
         }
 
         Matrix sumMatrix = itemMatrix.Add(submatrix);
+        int[,] sumArray = new int[sumMatrix.Shape.Row, sumMatrix.Shape.Col];
+        for (int i = 0; i < sumMatrix.Shape.Row; i++)
+        {
+            for (int j = 0; j < sumMatrix.Shape.Col; j++)
+            {
+                if (sumMatrix[i, j] > 1)
+                    sumArray[i, j] = sumMatrix[i, j];
+                else
+                    sumArray[i, j] = itemMatrix[i, j];
+            }
+        }
 
-        sumMatrix.Reshape(inventoryShape, out Matrix highlightMatrix, row, col);
+        new Matrix(sumArray).Reshape(inventoryShape, out Matrix highlightMatrix, row, col);
 
         // Конвертируем в массив и передаём во View
         int[,] highlightArray = new int[inventoryShape.Row, inventoryShape.Col];
