@@ -56,25 +56,28 @@ public class CanvasView : MonoBehaviour
         ItemBeginDrag?.Invoke(item.Id);
     }
 
-    private void OnItemDragging(ItemView item, Vector2 screenPosition)
+    private bool TryGetInventoryAtScreenPosition(Vector2 screenPosition, out InventoryType inventoryType, out InventoryView inventory)
     {
-        InventoryType targetInventoryType = InventoryType.CASE;
-        InventoryView targetInventory = null;
-        Vector2 tablePosition = Vector2.zero;
-
         foreach (var inventoryPair in inventories)
         {
             if (inventoryPair.Value.IsPointInside(screenPosition))
             {
-                inventoryPair.Value.GetTablePosition(screenPosition, out tablePosition);
-                targetInventory = inventoryPair.Value;
-                targetInventoryType = inventoryPair.Key;
-                break;
+                inventory = inventoryPair.Value;
+                inventoryType = inventoryPair.Key;
+                return true;
             }
         }
 
-        if (targetInventory != null)
+        inventory = null;
+        inventoryType = default;
+        return false;
+    }
+
+    private void OnItemDragging(ItemView item, Vector2 screenPosition)
+    {
+        if (TryGetInventoryAtScreenPosition(screenPosition, out InventoryType targetInventoryType, out InventoryView targetInventory))
         {
+            targetInventory.GetTablePosition(screenPosition, out Vector2 tablePosition);
             int col = (int)tablePosition.x;
             int row = (int)Math.Abs(tablePosition.y - targetInventory.Row + 1);
 
@@ -89,28 +92,14 @@ public class CanvasView : MonoBehaviour
     // Обработчик события drop от ItemView
     private void OnItemDropped(ItemView item, Vector2 screenPosition)
     {
-        InventoryType newContainerType = InventoryType.CASE;
-        InventoryView newContainer = null;
-        Vector2 tablePosition = Vector2.zero;
-
-        foreach (var inventoryPair in inventories)
-        {
-            // Определяем, в какую область попал итем
-            if (inventoryPair.Value.IsPointInside(screenPosition))
-            {
-                inventoryPair.Value.GetTablePosition(screenPosition, out tablePosition);
-                newContainer = inventoryPair.Value;
-                newContainerType = inventoryPair.Key;
-            }
-        }
-
         // Если итем не попал ни в одну область, возвращаем на исходную позицию
-        if (newContainer == null)
+        if (!TryGetInventoryAtScreenPosition(screenPosition, out InventoryType newContainerType, out InventoryView newContainer))
         {
             item.ResetPosition();
             return;
         }
 
+        newContainer.GetTablePosition(screenPosition, out Vector2 tablePosition);
         int col = (int)tablePosition.x;
         int row = (int)Math.Abs(tablePosition.y - newContainer.Row + 1);
 
@@ -119,16 +108,13 @@ public class CanvasView : MonoBehaviour
 
         if (canPlace)
         {
-            // Перемещаем итем в новый контейнер, если он изменился
             item.transform.SetParent(newContainer.GetContainer(), true);
             itemContainers[item.Id] = newContainer;
 
-            // Устанавливаем новую позицию
             item.SetPosition(newContainer.GetLocalPosition(tablePosition));
         }
         else
         {
-            // Возвращаем на исходную позицию
             item.ResetPosition();
         }
 
