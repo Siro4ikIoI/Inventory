@@ -56,30 +56,30 @@ public class CanvasView : MonoBehaviour
         ItemBeginDrag?.Invoke(item.Id);
     }
 
-    private bool TryGetInventoryAtScreenPosition(Vector2 screenPosition, out InventoryType inventoryType, out InventoryView inventory)
+    private InventoryType GetInventoryAtScreenPosition(Vector2 screenPosition)
     {
+        InventoryType inventoryType = InventoryType.NONE;
+
         foreach (var inventoryPair in inventories)
         {
             if (inventoryPair.Value.IsPointInside(screenPosition))
             {
-                inventory = inventoryPair.Value;
                 inventoryType = inventoryPair.Key;
-                return true;
             }
         }
 
-        inventory = null;
-        inventoryType = default;
-        return false;
+        return inventoryType;
     }
 
     private void OnItemDragging(ItemView item, Vector2 screenPosition)
     {
-        if (TryGetInventoryAtScreenPosition(screenPosition, out InventoryType targetInventoryType, out InventoryView targetInventory))
+        InventoryType targetInventoryType = GetInventoryAtScreenPosition(screenPosition);
+
+        if (targetInventoryType != InventoryType.NONE)
         {
-            targetInventory.GetTablePosition(screenPosition, out Vector2 tablePosition);
+            inventories[targetInventoryType].GetTablePosition(screenPosition, out Vector2 tablePosition);
             int col = (int)tablePosition.x;
-            int row = (int)Math.Abs(tablePosition.y - targetInventory.Row + 1);
+            int row = (int)Math.Abs(tablePosition.y - inventories[targetInventoryType].Row + 1);
 
             ItemDragPositionChanged?.Invoke(item.Id, targetInventoryType, row, col);
         }
@@ -93,19 +93,13 @@ public class CanvasView : MonoBehaviour
     private void OnItemDropped(ItemView item, Vector2 screenPosition)
     {
         Vector2 tablePosition = Vector2.zero;
-
-        // Если итем не попал ни в одну область, возвращаем на исходную позицию
-        if (!TryGetInventoryAtScreenPosition(screenPosition, out InventoryType newContainerType, out InventoryView newContainer))
-        {
-            item.ResetPosition();
-            return;
-        }
-        newContainer.GetTablePosition(screenPosition, out tablePosition);
-
+        InventoryType newContainerType = GetInventoryAtScreenPosition(screenPosition);
+        inventories.TryGetValue(newContainerType, out InventoryView newContainer);
+       
         int row = -1, col = -1;
-
         if (newContainerType != InventoryType.NONE)
         {
+            newContainer.GetTablePosition(screenPosition, out tablePosition);
             col = (int)tablePosition.x;
             row = (int)Math.Abs(tablePosition.y - newContainer.Row + 1);
         }
