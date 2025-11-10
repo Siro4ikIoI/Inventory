@@ -115,4 +115,9 @@ public class Matrix : ICloneable
     {
         return new Matrix(_matrix);
     }
+
+    public int[,] GetStructure()
+    {
+        return (int[,]) _matrix.Clone();
+    }
 }
