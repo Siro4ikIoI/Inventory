@@ -120,4 +120,18 @@ public class Matrix : ICloneable
     {
         return (int[,]) _matrix.Clone();
     }
+
+    public Matrix Rotate()
+    {
+        int[,] transposed = new int[Shape.Col, Shape.Row];
+        for (int i = 0; i < Shape.Row; i++)
+        {
+            for (int j = 0; j < Shape.Col; j++)
+            {
+                transposed[j, i] = this[Shape.Row - i - 1, j];
+            }
+        }
+
+        return new Matrix(transposed);
+    }
 }

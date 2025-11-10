@@ -12,17 +12,19 @@ public class ItemView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     public int Id { get; private set; }
 
     [SerializeField] private Image iconImage;
-    [SerializeField] private Text nameText;
 
     private RectTransform rectTransform;
     private Vector2 originalPosition;
     private Canvas canvas;
     private Transform originParent;
 
+    private BlockGridView blocksWrapper;
+
     void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         canvas = GetComponentInParent<Canvas>();
+        blocksWrapper = GetComponentInChildren<BlockGridView>();
     }
 
     // Инициализация итема данными
@@ -73,5 +75,11 @@ public class ItemView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     {
         // Вызываем событие с экранными координатами
         ItemDropped?.Invoke(this, transform.position);
+    }
+
+    public void SetRotation(Direction direction, int[,] blocks)
+    {
+        blocksWrapper.Rotate(blocks);
+        iconImage.transform.eulerAngles = Vector3.forward * -90 * (int)direction;
     }
 }

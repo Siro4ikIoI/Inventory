@@ -8,6 +8,7 @@ public class CanvasView : MonoBehaviour
     public event Func<int, InventoryType, int, int, bool> ItemDroped;
     public event Action<int, InventoryType, int, int> ItemDragPositionChanged;
     public event Action<int> ItemBeginDrag;
+    public event Action ItemRotation;
 
     [SerializeField] private InventoryView inventoryView;
     [SerializeField] private InventoryView caseView;
@@ -150,5 +151,20 @@ public class CanvasView : MonoBehaviour
                 item.ItemDragging -= OnItemDragging;
             }
         }
+    }
+
+    private void Update()
+    {
+        if (Input.GetMouseButtonUp(1))
+        {
+            ItemRotation?.Invoke();
+        }
+    }
+
+    public void RotateItem(int id, Direction direction, int[,] blocks)
+    {
+        ItemView itemView = spawnedItems[id];
+        itemView.SetRotation(direction, blocks);
+        OnItemDragging(itemView, itemView.transform.position);
     }
 }

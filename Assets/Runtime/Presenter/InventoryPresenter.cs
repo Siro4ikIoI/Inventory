@@ -11,6 +11,8 @@ public class InventoryPresenter
 
     private Inventory _previousItemInventory = null;
     private Pair _previousItemPosition;
+    private Item _currentItem;
+    private Direction _lastItemRotation;
 
     public InventoryPresenter(CanvasView canvas)
     {
@@ -26,6 +28,16 @@ public class InventoryPresenter
         _canvas.ItemDroped += OnItemDroped;
         _canvas.ItemDragPositionChanged += OnItemDragPositionChanged;
         _canvas.ItemBeginDrag += OnItemBeginDrag;
+        _canvas.ItemRotation += OnItemRotation;
+    }
+
+    private void OnItemRotation()
+    {
+        if (_currentItem == null)
+            return;
+
+        _currentItem.Rotate();
+        _canvas.RotateItem(_currentItem.Id, _currentItem.GetRotation(), _currentItem.ToMatrix().GetStructure());
     }
 
     private void OnItemBeginDrag(int itemId)
@@ -41,6 +53,9 @@ public class InventoryPresenter
             _previousItemInventory = sourceInventory;
             _previousItemPosition = position;
         }
+
+        _currentItem = item;
+        _lastItemRotation = item.GetRotation();
     }
 
     private bool OnItemDroped(int itemId, InventoryType inventoryType, int row, int col)
@@ -48,8 +63,12 @@ public class InventoryPresenter
         Item item = _items[itemId];
         if (inventoryType == InventoryType.NONE || !_inventories[inventoryType].TryAddItem(item, new Pair(row, col)))
         {
+            _currentItem.SetRotation(_lastItemRotation);
+            _canvas.RotateItem(_currentItem.Id, _currentItem.GetRotation(), _currentItem.ToMatrix().GetStructure());
             _previousItemInventory.TryAddItem(item, _previousItemPosition);
+            
             _previousItemInventory = null;
+            _currentItem = null;
             return false;
         }
 
@@ -59,6 +78,7 @@ public class InventoryPresenter
         }
 
         _previousItemInventory = null;
+        _currentItem = null;
         return true;
     }
 
