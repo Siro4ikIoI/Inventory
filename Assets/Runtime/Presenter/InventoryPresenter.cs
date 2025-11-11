@@ -14,6 +14,8 @@ public class InventoryPresenter
     private Item _currentItem;
     private Direction _lastItemRotation;
 
+    private GameState _gameState;
+
     public InventoryPresenter(CanvasView canvas)
     {
         _inventories.Add(InventoryType.CASE, new Inventory(new Pair(7, 4)));
@@ -28,7 +30,12 @@ public class InventoryPresenter
         _canvas.ItemDroped += OnItemDroped;
         _canvas.ItemDragPositionChanged += OnItemDragPositionChanged;
         _canvas.ItemBeginDrag += OnItemBeginDrag;
+
         _canvas.ItemRotation += OnItemRotation;
+
+        _gameState = new GameState();
+        _gameState.ScoreChanged += OnScoreChanged;
+        _canvas.UpdateScoreDisplay(_gameState.Score);
     }
 
     private void OnItemRotation()
@@ -38,6 +45,11 @@ public class InventoryPresenter
 
         _currentItem.Rotate();
         _canvas.RotateItem(_currentItem.Id, _currentItem.GetRotation(), _currentItem.ToMatrix().GetStructure());
+    }
+
+    private void OnScoreChanged(int newScore)
+    {
+        _canvas.UpdateScoreDisplay(newScore);
     }
 
     private void OnItemBeginDrag(int itemId)
@@ -70,6 +82,11 @@ public class InventoryPresenter
             _previousItemInventory = null;
             _currentItem = null;
             return false;
+        }
+
+        if (inventoryType == InventoryType.INVENTARY)
+        {
+            _gameState.AddScore(item, itemId);
         }
 
         if (_previousItemInventory.IsEmpty() && inventoryType == InventoryType.INVENTARY)
@@ -117,7 +134,7 @@ public class InventoryPresenter
 
         new Matrix(sumArray).Reshape(inventoryShape, out Matrix highlightMatrix, row, col);
 
-        // Конвертируем в массив и передаём во View
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ View
         int[,] highlightArray = new int[inventoryShape.Row, inventoryShape.Col];
         for (int i = 0; i < inventoryShape.Row; i++)
         {

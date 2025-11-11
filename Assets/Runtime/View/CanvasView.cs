@@ -12,6 +12,7 @@ public class CanvasView : MonoBehaviour
 
     [SerializeField] private InventoryView inventoryView;
     [SerializeField] private InventoryView caseView;
+    [SerializeField] private ScoreView scoreView;
 
     private Dictionary<InventoryType, InventoryView> inventories = new();
     private Dictionary<int, ItemView> spawnedItems = new Dictionary<int, ItemView>();
@@ -136,6 +137,14 @@ public class CanvasView : MonoBehaviour
         foreach (var inventory in inventories.Values)
         {
             inventory.ResetHighlight();
+        }
+    }
+
+    public void UpdateScoreDisplay(int score)
+    {
+        if (scoreView != null)
+        {
+            scoreView.UpdateScore(score);
         }
     }
 
