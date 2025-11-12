@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-public class Matrix : ICloneable
+public class Matrix
 {
     private readonly int[,] _matrix;
 
@@ -44,7 +44,7 @@ public class Matrix : ICloneable
 
     public Matrix Substract(Matrix other)
     {
-        Matrix negativeOther = other.Clone() as Matrix;
+        Matrix negativeOther = new Matrix(other._matrix);
         for (int i = 0; i < this.Shape.Row; i++)
         {
             for (int j = 0; j < this.Shape.Col; j++)
@@ -109,11 +109,6 @@ public class Matrix : ICloneable
     public int Min()
     {
         return _matrix.Cast<int>().Min();
-    }
-
-    public object Clone()
-    {
-        return new Matrix(_matrix);
     }
 
     public int[,] GetStructure()

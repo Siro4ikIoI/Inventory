@@ -158,7 +158,7 @@ public class InventoryPresenter
     {
         Inventory inventory = _inventories[InventoryType.INVENTARY];
 
-        Matrix workingMatrix = (Matrix)inventory.ToMatrix().Clone();
+        Matrix workingMatrix = new Matrix(inventory.ToMatrix().GetStructure());
 
         for (int i = 0; i < count; i++)
         {
