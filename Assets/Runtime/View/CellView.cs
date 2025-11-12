@@ -2,22 +2,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum CellState :int
-{
-    NORMAL = 0,
-    VALID = 1,
-    INVALID = 2
-}
-
 public class CellView : MonoBehaviour
 {
     [SerializeField] private Image backgroundImage; 
 
-    private Dictionary<CellState, Color> stateToColor = new()
+    private Dictionary<CellViewState, Color> stateToColor = new()
     {
-        { CellState.NORMAL, Color.white },
-        { CellState.VALID, Color.green },
-        { CellState.INVALID, Color.red }
+        { CellViewState.NORMAL, Color.white },
+        { CellViewState.VALID, Color.green },
+        { CellViewState.INVALID, Color.red }
     };
 
     void Awake()
@@ -32,14 +25,14 @@ public class CellView : MonoBehaviour
     {
         if (backgroundImage == null) return;
 
-        backgroundImage.color = stateToColor[(CellState)state];
+        backgroundImage.color = stateToColor[(CellViewState)state];
     }
 
     public void ResetHighlight()
     {
         if (backgroundImage != null)
         {
-            backgroundImage.color = stateToColor[CellState.NORMAL];
+            backgroundImage.color = stateToColor[CellViewState.NORMAL];
         }
     }
 }
