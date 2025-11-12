@@ -110,7 +110,7 @@ public class InventoryPresenter
         Matrix itemMatrix = item.ToMatrix();
         Pair inventoryShape = targetInventory.Shape;
 
-        bool isInBounds = targetInventory.ToMatrix().GetSubmatrix(itemMatrix.Shape, row, col, out Matrix submatrix);
+        bool isInBounds = targetInventory.ToMatrix().GetSubmatrix(itemMatrix.Size, row, col, out Matrix submatrix);
 
         if (!isInBounds)
         {
@@ -120,10 +120,10 @@ public class InventoryPresenter
         }
 
         Matrix sumMatrix = itemMatrix.Add(submatrix);
-        int[,] sumArray = new int[sumMatrix.Shape.Row, sumMatrix.Shape.Col];
-        for (int i = 0; i < sumMatrix.Shape.Row; i++)
+        int[,] sumArray = new int[sumMatrix.Size.Row, sumMatrix.Size.Col];
+        for (int i = 0; i < sumMatrix.Size.Row; i++)
         {
-            for (int j = 0; j < sumMatrix.Shape.Col; j++)
+            for (int j = 0; j < sumMatrix.Size.Col; j++)
             {
                 if (sumMatrix[i, j] > 1)
                     sumArray[i, j] = sumMatrix[i, j];
@@ -180,7 +180,7 @@ public class InventoryPresenter
                     _inventories[InventoryType.CASE].TryAddItem(item, pos);
                     _canvas.SpawnItem(item.Id, itemSettings.item, pos.Row, pos.Col);
 
-                    item.ToMatrix().Reshape(workingMatrix.Shape, out var itemMatrix, actualPos.Row, actualPos.Col);
+                    item.ToMatrix().Reshape(workingMatrix.Size, out var itemMatrix, actualPos.Row, actualPos.Col);
                     workingMatrix = workingMatrix.Add(itemMatrix);
 
                     placed = true;
@@ -200,11 +200,11 @@ public class InventoryPresenter
     {
         foundPos = new Pair(0, 0);
 
-        for (int row = 0; row < inventory.Shape.Row; row++)
+        for (int row = 0; row < inventory.Size.Row; row++)
         {
-            for (int col = 0; col < inventory.Shape.Col; col++)
+            for (int col = 0; col < inventory.Size.Col; col++)
             {
-                bool inBounds = item.ToMatrix().Reshape(inventory.Shape, out Matrix itemMatrix, row, col);
+                bool inBounds = item.ToMatrix().Reshape(inventory.Size, out Matrix itemMatrix, row, col);
                 if (!inBounds)
                     continue;
 

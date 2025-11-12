@@ -6,7 +6,7 @@ public class Inventory : IMatrix
     private Dictionary<Item, Pair> _items = new();
 
     private Matrix _cells;
-    public Pair Shape { get { return _cells.Shape; } }
+    public Pair Shape { get { return _cells.Size; } }
 
     public Inventory(Pair shape)
     {
@@ -32,7 +32,7 @@ public class Inventory : IMatrix
         if (ContainsItem(item))
             return false;
 
-        bool isItemInBorder = item.ToMatrix().Reshape(_cells.Shape, out Matrix itemMatrix, pos.Row, pos.Col);
+        bool isItemInBorder = item.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, pos.Row, pos.Col);
         if (!isItemInBorder)
             return false;
 
@@ -53,7 +53,7 @@ public class Inventory : IMatrix
             return false;
 
         pos = _items[item];
-        item.ToMatrix().Reshape(_cells.Shape, out Matrix itemMatrix, pos.Row, pos.Col);
+        item.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, pos.Row, pos.Col);
         _cells = _cells.Substract(itemMatrix);
         _items.Remove(item);
         return true;
