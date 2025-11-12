@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum CellState :int
+public enum CellState
 {
     NORMAL = 0,
     VALID = 1,
