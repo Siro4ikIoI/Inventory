@@ -1,4 +1,4 @@
-public class Item : IMatrix
+public class Item
 {
     private Matrix _blocks;
 
