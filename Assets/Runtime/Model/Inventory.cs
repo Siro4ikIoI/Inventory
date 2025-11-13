@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class Inventory : IMatrix
+public class Inventory
 {
     private Dictionary<Item, Pair> _items = new();
 
