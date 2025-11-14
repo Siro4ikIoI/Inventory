@@ -1,5 +1,9 @@
+using System;
+
 public class Item
 {
+    public event Action<Direction> Rotated;
+
     private Matrix _blocks;
 
     public int Id { get; private set; }
@@ -22,19 +26,28 @@ public class Item
     {
         _blocks = _blocks.Rotate();
         _rotation++;
+
+        Rotated?.Invoke(_rotation);
     }
 
     public void SetRotation(Direction direction)
     {
         int rotationAmount = direction - _rotation;
         if (rotationAmount < 0)
+        {
             rotationAmount += 4;
+        }
 
         for (int i = 0; i < rotationAmount; i++)
         {
             Rotate();
         }
+
+        Rotated?.Invoke(_rotation);
     }
 
-    public Direction GetRotation() => _rotation;
+    public Direction GetRotation()
+    {
+        return _rotation;
+    }
 }
