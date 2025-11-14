@@ -69,7 +69,7 @@ public class InventoryView : MonoBehaviour
     // Получить локальную позицию внутри инвентаря
     public bool GetTablePosition(Vector2 screenPosition, out Vector2 localPosition, Camera camera = null)
     {
-        bool b = RectTransformUtility.ScreenPointToLocalPointInRectangle(
+        bool success = RectTransformUtility.ScreenPointToLocalPointInRectangle(
             inventoryArea,
             screenPosition,
             camera,
@@ -85,7 +85,7 @@ public class InventoryView : MonoBehaviour
 
         localPosition = new Vector2(colIndex, rowIndex);
 
-        return b;
+        return success;
     }
 
     public void HighlightCells(int[,] highlightArray)
