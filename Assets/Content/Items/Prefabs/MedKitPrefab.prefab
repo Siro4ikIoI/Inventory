@@ -427,6 +427,7 @@ GameObject:
   - component: {fileID: 6246945516125941407}
   - component: {fileID: 7693285169842606119}
   - component: {fileID: 2601718709323262765}
+  - component: {fileID: 8910129925405874910}
   m_Layer: 5
   m_Name: MedKitPrefab
   m_TagString: Untagged
@@ -475,6 +476,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   iconImage: {fileID: 1881308967794673730}
+  rectTransform: {fileID: 6246945516125941407}
+  blocksWrapper: {fileID: 4257690973410129963}
+  dragAndDrop: {fileID: 8910129925405874910}
+--- !u!114 &8910129925405874910
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8484643951335964248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7322eb4ef52f5514eb42a97fcebe63e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8850319103889964414
 GameObject:
   m_ObjectHideFlags: 0

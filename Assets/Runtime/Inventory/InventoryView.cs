@@ -78,7 +78,7 @@ public class InventoryView : MonoBehaviour
 
         Rect rect = GetContainer().rect;
         float normalizedX = (localPosition.x - rect.xMin) / rect.width;
-        float normalizedY = (localPosition.y - rect.yMin) / rect.height;        
+        float normalizedY = (localPosition.y - rect.yMin) / rect.height;
 
         int rowIndex = (int)Math.Round(normalizedY * Row, MidpointRounding.AwayFromZero);
         int colIndex = (int)Math.Round(normalizedX * Col, MidpointRounding.AwayFromZero);

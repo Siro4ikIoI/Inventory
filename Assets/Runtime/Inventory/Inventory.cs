@@ -1,8 +1,13 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 public class Inventory
 {
+    public event Action<Item, Pair> ItemAdded;
+    public event Action<Item> ItemExtracted;
+    public event Action<int[,]> CollisionWhenAdding;
+
     private Dictionary<Item, Pair> _items = new();
 
     private Matrix _cells;
@@ -42,6 +47,8 @@ public class Inventory
 
         _items.Add(item, pos);
         _cells = newCells;
+
+        ItemAdded?.Invoke(item, pos);
         return true;
     }
 
@@ -56,7 +63,41 @@ public class Inventory
         item.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, pos.Row, pos.Col);
         _cells = _cells.Substract(itemMatrix);
         _items.Remove(item);
+
+        ItemExtracted?.Invoke(item);
         return true;
+    }
+
+    public bool CanAddItem(Item item, Pair position)
+    {
+        if (_items.ContainsKey(item))
+            return false;
+
+        Matrix itemMatrix = item.ToMatrix();
+        bool isInBounds = _cells.GetSubmatrix(itemMatrix.Size, position.Row, position.Col, out Matrix submatrix);
+        if (!isInBounds)
+        {
+            int[,] emptyArray = new int[Shape.Row, Shape.Col];
+            CollisionWhenAdding?.Invoke(emptyArray);
+            return false;
+        }
+
+        Matrix sumMatrix = itemMatrix.Add(submatrix);
+        int[,] sumArray = new int[sumMatrix.Size.Row, sumMatrix.Size.Col];
+        for (int i = 0; i < sumMatrix.Size.Row; i++)
+        {
+            for (int j = 0; j < sumMatrix.Size.Col; j++)
+            {
+                if (sumMatrix[i, j] > 1)
+                    sumArray[i, j] = sumMatrix[i, j];
+                else
+                    sumArray[i, j] = itemMatrix[i, j];
+            }
+        }
+
+        new Matrix(sumArray).Reshape(Shape, out Matrix collisionMatrix, position.Row, position.Col);
+        CollisionWhenAdding?.Invoke(collisionMatrix.GetStructure());
+        return collisionMatrix.Max() > (int)CellType.FILL;
     }
 
     public Matrix ToMatrix()
