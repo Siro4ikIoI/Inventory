@@ -16,14 +16,14 @@ public class GameState
 
     public event Action<int> ScoreChanged;
 
-    public void AddScore(Item item, int itemId)
+    public void AddScore(Item item)
     {
-        if (_scoredItems.Contains(itemId))
+        if (_scoredItems.Contains(item.Id))
             return; // Очки за этот предмет уже начислены
 
         int points = CalculatePoints(item);
         _score += points;
-        _scoredItems.Add(itemId);
+        _scoredItems.Add(item.Id);
         ScoreChanged?.Invoke(_score);
     }
 
