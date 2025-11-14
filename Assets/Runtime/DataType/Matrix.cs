@@ -5,10 +5,10 @@ public class Matrix
 {
     private readonly int[,] _matrix;
 
-    public int this[int r_key, int c_key]
+    public int this[int row_key, int col_key]
     {
-        get => _matrix[r_key, c_key];
-        private set => _matrix[r_key, c_key] = value;
+        get => _matrix[row_key, col_key];
+        private set => _matrix[row_key, col_key] = value;
     }
 
     public Pair Size
@@ -31,10 +31,10 @@ public class Matrix
         if (this.Size != other.Size)
             throw new Exception("Different shapes");
 
-        Matrix result = new Matrix(this.Size);
-        for (int i = 0; i < this.Size.Row; i++)
+        Matrix result = new Matrix(Size);
+        for (int i = 0; i < Size.Row; i++)
         {
-            for (int j = 0; j < this.Size.Col; j++)
+            for (int j = 0; j < Size.Col; j++)
             {
                 result[i, j] = this[i, j] + other[i, j];
             }
@@ -45,9 +45,9 @@ public class Matrix
     public Matrix Substract(Matrix other)
     {
         Matrix negativeOther = new Matrix(other._matrix);
-        for (int i = 0; i < this.Size.Row; i++)
+        for (int i = 0; i < Size.Row; i++)
         {
-            for (int j = 0; j < this.Size.Col; j++)
+            for (int j = 0; j < Size.Col; j++)
             {
                 negativeOther[i, j] *= -1;
             }
@@ -59,13 +59,13 @@ public class Matrix
     public bool Reshape(Pair newShape, out Matrix result, int OffestRow = 0, int OffsetCol = 0)
     {
         result = new Matrix(newShape);
-        for (int i = 0; i < this.Size.Row; i++)
+        for (int i = 0; i < Size.Row; i++)
         {
             int newi = i + OffestRow;
             if (newi < 0 || newi >= result.Size.Row)
                 return false;
             
-            for (int j = 0; j < this.Size.Col; j++)
+            for (int j = 0; j < Size.Col; j++)
             {
                 int newj = j + OffsetCol;
                 if (newj < 0 || newj >= result.Size.Col)
@@ -88,8 +88,8 @@ public class Matrix
                 int sourceRow = i + offsetRow;
                 int sourceCol = j + offsetCol;
 
-                if (sourceRow < 0 || sourceRow >= this.Size.Row ||
-                    sourceCol < 0 || sourceCol >= this.Size.Col)
+                if (sourceRow < 0 || sourceRow >= Size.Row ||
+                    sourceCol < 0 || sourceCol >= Size.Col)
                 {
                     return false;
                 }
