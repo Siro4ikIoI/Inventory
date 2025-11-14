@@ -23,14 +23,7 @@ public class Inventory
         return _items.Keys.Contains(item);
     }
 
-    public bool IsEmpty()
-    {
-        if (_items.Count == 0 )
-        {
-            return true;
-        }
-        return false;
-    }
+    public bool IsEmpty() => _items.Count == 0;
 
     public bool TryAddItem(Item item, Pair pos)
     {
