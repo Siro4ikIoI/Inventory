@@ -41,7 +41,7 @@ public class InventoryHighlightPresenter
         ResetAllHighlights();
     }
 
-    private void OnItemRotated(Direction obj)
+    private void OnItemRotated(Direction DirectionObject)
     {
         HighlightInventoryCells();
     }
