@@ -51,9 +51,9 @@ public class ItemGenerator
         return itemSettings;
     }
 
-    private bool TryFindFreePosition(Matrix item, Matrix inventory, out Pair foundPos)
+    private bool TryFindFreePosition(Matrix item, Matrix inventory, out Pair foundPosition)
     {
-        foundPos = new Pair(0, 0);
+        foundPosition = new Pair(0, 0);
 
         for (int row = 0; row < inventory.Size.Row; row++)
         {
@@ -66,7 +66,7 @@ public class ItemGenerator
                 Matrix newCells = inventory.Add(itemMatrix);
                 if (newCells.Max() <= (int)CellType.FILL)
                 {
-                    foundPos = new Pair(row, col);
+                    foundPosition = new Pair(row, col);
                     return true;
                 }
             }
