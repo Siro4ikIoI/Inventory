@@ -108,7 +108,7 @@ public class DragAndDropPresenter
     {
         inventoryView.GetTablePosition(position, out Vector2 tablePosition);
         int col = (int)tablePosition.x;
-        int row = (int)Math.Abs(tablePosition.y - inventory.Shape.Row + 1);
+        int row = (int)(inventory.Shape.Row - tablePosition.y - 1);
         return new Pair(row, col);
     }
 
