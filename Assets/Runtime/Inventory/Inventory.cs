@@ -32,12 +32,12 @@ public class Inventory
         return false;
     }
 
-    public bool TryAddItem(Item item, Pair pos)
+    public bool TryAddItem(Item item, Pair position)
     {
         if (ContainsItem(item))
             return false;
 
-        bool isItemInBorder = item.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, pos.Row, pos.Col);
+        bool isItemInBorder = item.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, position.Row, position.Col);
         if (!isItemInBorder)
             return false;
 
@@ -45,22 +45,22 @@ public class Inventory
         if (newCells.Max() > (int)CellType.FILL)
             return false;
 
-        _items.Add(item, pos);
+        _items.Add(item, position);
         _cells = newCells;
 
-        ItemAdded?.Invoke(item, pos);
+        ItemAdded?.Invoke(item, position);
         return true;
     }
 
-    public bool TryExtractItem(Item item, out Pair pos)
+    public bool TryExtractItem(Item item, out Pair position)
     {
-        pos = new Pair(-1, -1);
+        position = new Pair(-1, -1);
 
         if (!ContainsItem(item))
             return false;
 
-        pos = _items[item];
-        item.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, pos.Row, pos.Col);
+        position = _items[item];
+        item.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, position.Row, position.Col);
         _cells = _cells.Substract(itemMatrix);
         _items.Remove(item);
 
