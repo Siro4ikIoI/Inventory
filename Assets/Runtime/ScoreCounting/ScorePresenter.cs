@@ -18,7 +18,7 @@ public class ScorePresenter
         _scoreView.UpdateScore(score);
     }
 
-    private void OnItemAdded(Item item, Pair position)
+    private void OnItemAdded(Item item, (int row, int col) position)
     {
         _gameState.AddScore(item);
     }

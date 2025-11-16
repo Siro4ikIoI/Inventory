@@ -11,14 +11,14 @@ public class Matrix
         private set => _matrix[row_key, col_key] = value;
     }
 
-    public Pair Size
+    public (int row, int col) Size
     {
-        get => new Pair(_matrix.GetLength(0), _matrix.GetLength(1));
+        get => new (_matrix.GetLength(0), _matrix.GetLength(1));
     }
 
-    public Matrix(Pair shape)
+    public Matrix((int row, int col) shape)
     {
-        _matrix = new int[shape.Row, shape.Col];
+        _matrix = new int[shape.row, shape.col];
     }
 
     public Matrix(int [,] values)
@@ -28,13 +28,13 @@ public class Matrix
 
     public Matrix Add(Matrix other)
     {
-        if (this.Size != other.Size)
+        if (Size != other.Size)
             throw new Exception("Different shapes");
 
         Matrix result = new Matrix(Size);
-        for (int i = 0; i < Size.Row; i++)
+        for (int i = 0; i < Size.row; i++)
         {
-            for (int j = 0; j < Size.Col; j++)
+            for (int j = 0; j < Size.col; j++)
             {
                 result[i, j] = this[i, j] + other[i, j];
             }
@@ -45,9 +45,9 @@ public class Matrix
     public Matrix Substract(Matrix other)
     {
         Matrix negativeOther = new Matrix(other._matrix);
-        for (int i = 0; i < Size.Row; i++)
+        for (int i = 0; i < Size.row; i++)
         {
-            for (int j = 0; j < Size.Col; j++)
+            for (int j = 0; j < Size.col; j++)
             {
                 negativeOther[i, j] *= -1;
             }
@@ -56,19 +56,19 @@ public class Matrix
         return this.Add(negativeOther);
     }
 
-    public bool Reshape(Pair newShape, out Matrix result, int OffestRow = 0, int OffsetCol = 0)
+    public bool Reshape((int row, int col) newShape, out Matrix result, int OffestRow = 0, int OffsetCol = 0)
     {
         result = new Matrix(newShape);
-        for (int i = 0; i < Size.Row; i++)
+        for (int i = 0; i < Size.row; i++)
         {
             int newi = i + OffestRow;
-            if (newi < 0 || newi >= result.Size.Row)
+            if (newi < 0 || newi >= result.Size.row)
                 return false;
             
-            for (int j = 0; j < Size.Col; j++)
+            for (int j = 0; j < Size.col; j++)
             {
                 int newj = j + OffsetCol;
-                if (newj < 0 || newj >= result.Size.Col)
+                if (newj < 0 || newj >= result.Size.col)
                     return false;
 
                 result[newi, newj] = this[i, j];
@@ -77,19 +77,19 @@ public class Matrix
         return true;
     }
 
-    public bool GetSubmatrix(Pair subShape, int offsetRow, int offsetCol, out Matrix result)
+    public bool GetSubmatrix((int row, int col) subShape, int offsetRow, int offsetCol, out Matrix result)
     {
         result = new Matrix(subShape);
 
-        for (int i = 0; i < subShape.Row; i++)
+        for (int i = 0; i < subShape.row; i++)
         {
-            for (int j = 0; j < subShape.Col; j++)
+            for (int j = 0; j < subShape.col; j++)
             {
                 int sourceRow = i + offsetRow;
                 int sourceCol = j + offsetCol;
 
-                if (sourceRow < 0 || sourceRow >= Size.Row ||
-                    sourceCol < 0 || sourceCol >= Size.Col)
+                if (sourceRow < 0 || sourceRow >= Size.row ||
+                    sourceCol < 0 || sourceCol >= Size.col)
                 {
                     return false;
                 }
@@ -118,12 +118,12 @@ public class Matrix
 
     public Matrix Rotate()
     {
-        int[,] transposed = new int[Size.Col, Size.Row];
-        for (int i = 0; i < Size.Row; i++)
+        int[,] transposed = new int[Size.col, Size.row];
+        for (int i = 0; i < Size.row; i++)
         {
-            for (int j = 0; j < Size.Col; j++)
+            for (int j = 0; j < Size.col; j++)
             {
-                transposed[j, i] = this[Size.Row - i - 1, j];
+                transposed[j, i] = this[Size.row - i - 1, j];
             }
         }
 

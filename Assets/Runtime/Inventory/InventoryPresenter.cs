@@ -21,12 +21,12 @@ public class InventoryPresenter
         _itemSettings = itemSettings;
     }
 
-    private void OnItemAdded(Item item, Pair position)
+    private void OnItemAdded(Item item, (int row, int col) position)
     {
         ItemView itemprefab = _itemSettings.GetItemSoByType(item.Type).item;
         ItemView itemView = GameObject.Instantiate<ItemView>(itemprefab, _inventoryView.transform);
 
-        Vector2 tablePosition = new Vector2(position.Col, Math.Abs(position.Row - _inventory.Shape.Row + 1));
+        Vector2 tablePosition = new Vector2(position.col, Math.Abs(position.row - _inventory.Shape.row + 1));
         itemView.SetPosition(_inventoryView.GetLocalPosition(tablePosition));
         itemView.SetRotation(item.GetRotation(), item.ToMatrix().GetStructure());
 
@@ -86,8 +86,8 @@ public class InventoryPresenter
 
         _inventoryView.GetTablePosition(position, out Vector2 tablePosition);
         int col = (int)tablePosition.x;
-        int row = (int)(_inventory.Shape.Row - tablePosition.y - 1);
-        Pair cellPosition = new Pair(row, col);
+        int row = (int)(_inventory.Shape.row - tablePosition.y - 1);
+        (int row, int col) cellPosition = new (row, col);
 
         _dragAndDropModel.SetInventoryAndPosition(inventoryType, cellPosition);
     }

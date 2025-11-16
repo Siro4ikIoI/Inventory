@@ -38,9 +38,9 @@ public class GameState
         Matrix matrix = item.ToMatrix();
         int count = 0;
 
-        for (int i = 0; i < matrix.Size.Row; i++)
+        for (int i = 0; i < matrix.Size.row; i++)
         {
-            for (int j = 0; j < matrix.Size.Col; j++)
+            for (int j = 0; j < matrix.Size.col; j++)
             {
                 if (matrix[i, j] == (int)CellType.FILL)
                     count++;

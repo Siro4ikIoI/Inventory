@@ -40,7 +40,7 @@ public class ItemGenerator
                 {
                     itemSettings.Add(itemSO);
 
-                    itemMatrix.Reshape(workingMatrix.Size, out itemMatrix, actualPos.Row, actualPos.Col);
+                    itemMatrix.Reshape(workingMatrix.Size, out itemMatrix, actualPos.row, actualPos.col);
                     workingMatrix = workingMatrix.Add(itemMatrix);
 
                     placed = true;
@@ -51,13 +51,13 @@ public class ItemGenerator
         return itemSettings;
     }
 
-    private bool TryFindFreePosition(Matrix item, Matrix inventory, out Pair foundPosition)
+    private bool TryFindFreePosition(Matrix item, Matrix inventory, out (int row, int col) foundPosition)
     {
-        foundPosition = new Pair(0, 0);
+        foundPosition = new (0, 0);
 
-        for (int row = 0; row < inventory.Size.Row; row++)
+        for (int row = 0; row < inventory.Size.row; row++)
         {
-            for (int col = 0; col < inventory.Size.Col; col++)
+            for (int col = 0; col < inventory.Size.col; col++)
             {
                 bool inBounds = item.Reshape(inventory.Size, out Matrix itemMatrix, row, col);
                 if (!inBounds)
@@ -66,7 +66,7 @@ public class ItemGenerator
                 Matrix newCells = inventory.Add(itemMatrix);
                 if (newCells.Max() <= (int)CellType.FILL)
                 {
-                    foundPosition = new Pair(row, col);
+                    foundPosition = new (row, col);
                     return true;
                 }
             }
