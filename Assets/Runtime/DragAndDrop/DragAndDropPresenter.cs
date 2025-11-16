@@ -36,12 +36,9 @@ public class DragAndDropPresenter
         if (sourceInventory == null)
             return;
 
-        sourceInventory.TryExtractItem(_dragAndDropModel.Item, out (int row, int col) position);
+        sourceInventory.HideItem(_dragAndDropModel.Item);
         _dragAndDropView.transform.SetParent(_dragAndDropView.transform.parent.parent);
-
         _dragAndDropModel.PreviousItemInventory = sourceInventory;
-        _dragAndDropModel.PreviousItemPosition = position;
-        _dragAndDropModel.PreviousItemRotation = _dragAndDropModel.Item.GetRotation();
 
         _modelCollection.SetCurrentDragAndDrop(_dragAndDropModel);
     }
@@ -68,11 +65,15 @@ public class DragAndDropPresenter
         InventoryType inventoryType = _dragAndDropModel.CurrentInventory;
         (int row, int col) itemPosition = _dragAndDropModel.CurrentPosition;
 
-        if (inventoryType == InventoryType.NONE 
-            || !_modelCollection.GetInventory(inventoryType).TryAddItem(_dragAndDropModel.Item, itemPosition))
+        if (inventoryType != InventoryType.NONE 
+            && _modelCollection.GetInventory(inventoryType).CanAddItem(_dragAndDropModel.Item, itemPosition))
         {
-            _dragAndDropModel.Item.SetRotation(_dragAndDropModel.PreviousItemRotation);
-            _dragAndDropModel.PreviousItemInventory.TryAddItem(_dragAndDropModel.Item, _dragAndDropModel.PreviousItemPosition);
+            _dragAndDropModel.PreviousItemInventory.TryExtractItem(_dragAndDropModel.Item, out _);
+            _modelCollection.GetInventory(inventoryType).TryAddItem(_dragAndDropModel.Item, itemPosition);
+        }
+        else
+        {
+            _dragAndDropModel.PreviousItemInventory.RestoreItem(_dragAndDropModel.Item);
         }
 
         _dragAndDropModel.EndDrag();

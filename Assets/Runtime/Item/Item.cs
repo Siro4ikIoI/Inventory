@@ -1,6 +1,6 @@
 using System;
 
-public class Item
+public class Item : ICloneable
 {
     public event Action<Direction> Rotated;
 
@@ -51,5 +51,12 @@ public class Item
     public Direction GetRotation()
     {
         return _rotation;
+    }
+
+    public object Clone()
+    {
+        Item newItem = new Item(Id, Type, _blocks.GetStructure());
+        newItem._rotation = _rotation;
+        return newItem;
     }
 }

@@ -11,9 +11,6 @@ public class DragAndDropModel
     public Item Item { get { return _item; } }
     
     public Inventory PreviousItemInventory { get; set; }
-    public (int row, int col) PreviousItemPosition { get; set; }
-
-    public Direction PreviousItemRotation { get; set; }
 
     public InventoryType CurrentInventory { get; private set; }
 
