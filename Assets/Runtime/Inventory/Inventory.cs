@@ -11,10 +11,12 @@ public class Inventory
     private Dictionary<Item, Pair> _items = new();
 
     private Matrix _cells;
+    public InventoryType Type { get; private set; }
     public Pair Shape { get { return _cells.Size; } }
 
-    public Inventory(Pair shape)
+    public Inventory(InventoryType type, Pair shape)
     {
+        Type = type;
         _cells = new Matrix(shape);
     }
 

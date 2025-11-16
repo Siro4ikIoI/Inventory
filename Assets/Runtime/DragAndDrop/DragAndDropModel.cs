@@ -2,8 +2,9 @@ using System;
 
 public class DragAndDropModel
 {
-    public event Action Draged;
+    public event Action<float, float> Draged;
     public event Action EndDraged;
+    public event Action InventorySetted;
 
     private Item _item;
     public Item Item { get { return _item; } }
@@ -13,18 +14,25 @@ public class DragAndDropModel
 
     public Direction PreviousItemRotation { get; set; }
 
-    public InventoryType CurrentInventory { get; set; }
+    public InventoryType CurrentInventory { get; private set; }
 
-    public Pair CurrentPosition { get; set; }
+    public Pair CurrentPosition { get; private set; }
 
     public DragAndDropModel(Item item)
     {
         _item = item;
     }
 
-    public void Drag()
+    public void Drag(float x, float y)
     {
-        Draged?.Invoke();
+        Draged?.Invoke(x, y);
+    }
+
+    public void SetInventoryAndPosition(InventoryType inventory, Pair position)
+    {
+        CurrentInventory = inventory;
+        CurrentPosition = position;
+        InventorySetted?.Invoke();
     }
 
     public void EndDrag()

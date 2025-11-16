@@ -24,6 +24,8 @@ public class DragAndDropPresenter
         if (_modelCollection.GetCurrentDragAndDrop() != null)
             return;
 
+        _dragAndDropModel.SetInventoryAndPosition(InventoryType.NONE, new Pair(-1, -1));
+
         Inventory sourceInventory = null;
         foreach (Inventory inventory in _modelCollection.GetAllInventories())
         {
@@ -49,20 +51,13 @@ public class DragAndDropPresenter
         if (_modelCollection.GetCurrentDragAndDrop() != _dragAndDropModel)
             return;
 
-        ItemView itemView = _canvasView.GetItemView(_dragAndDropModel.Item.Id);
-        itemView.SetPosition(itemView.GetPosition() + delta / _canvasView.Canvas.scaleFactor);
+        RectTransform rectTransform = (RectTransform)_dragAndDropView.transform;
+        rectTransform.anchoredPosition += delta / _canvasView.Canvas.scaleFactor;
 
-        _dragAndDropModel.CurrentInventory = GetInventoryAtScreenPosition(itemView.transform.position);
-        Pair itemPosition = new Pair(-1, -1);
-        if (_dragAndDropModel.CurrentInventory != InventoryType.NONE)
-        {
-            Inventory inventory = _modelCollection.GetInventory(_dragAndDropModel.CurrentInventory);
-            InventoryView inventoryView = _canvasView.GetInventoryView(_dragAndDropModel.CurrentInventory);
-            itemPosition = GetItemPosition(itemView.transform.position, inventory, inventoryView);
-        }
+        _dragAndDropModel.SetInventoryAndPosition(InventoryType.NONE, new Pair(-1, -1));
 
-        _dragAndDropModel.CurrentPosition = itemPosition;
-        _dragAndDropModel.Drag();
+        Vector3 worldPosition = rectTransform.position;
+        _dragAndDropModel.Drag(worldPosition.x, worldPosition.y);
     }
 
     private void OnEndDrag() 
@@ -87,29 +82,6 @@ public class DragAndDropPresenter
         _dragAndDropModel.PreviousItemRotation = Direction.N;
         
         _modelCollection.SetCurrentDragAndDrop(null);
-    }
-
-    private InventoryType GetInventoryAtScreenPosition(Vector2 screenPosition)
-    {
-        InventoryType inventoryType = InventoryType.NONE;
-
-        foreach (var inventoryPair in _canvasView.GetAllInventoryViews())
-        {
-            if (inventoryPair.Value.IsPointInside(screenPosition))
-            {
-                inventoryType = inventoryPair.Key;
-            }
-        }
-
-        return inventoryType;
-    }
-
-    private Pair GetItemPosition(Vector2 position, Inventory inventory, InventoryView inventoryView)
-    {
-        inventoryView.GetTablePosition(position, out Vector2 tablePosition);
-        int col = (int)tablePosition.x;
-        int row = (int)(inventory.Shape.Row - tablePosition.y - 1);
-        return new Pair(row, col);
     }
 
     public void Enable()

@@ -17,7 +17,7 @@ public class InventoryHighlightPresenter
         {
             _dragAndDropModel.Item.Rotated -= OnItemRotated;
             _dragAndDropModel.EndDraged -= OnEndDrag;
-            _dragAndDropModel.Draged -= OnDrag;
+            _dragAndDropModel.InventorySetted -= OnInventorySetted;
 
             _dragAndDropModel = null;
         }
@@ -25,13 +25,13 @@ public class InventoryHighlightPresenter
         {
             _dragAndDropModel = dragAndDropModel;
 
-            _dragAndDropModel.Draged += OnDrag;
+            _dragAndDropModel.InventorySetted += OnInventorySetted;
             _dragAndDropModel.EndDraged += OnEndDrag;
             _dragAndDropModel.Item.Rotated += OnItemRotated;
         }
     }
 
-    private void OnDrag()
+    private void OnInventorySetted()
     {
         HighlightInventoryCells();
     }

@@ -48,7 +48,7 @@ public class Bootstrap : MonoBehaviour
 
     private InventoryPresenter CreateInventoryPresenter(InventoryType inventoryType, Pair inventoryShape)
     {
-        Inventory inventory = new Inventory(inventoryShape);
+        Inventory inventory = new Inventory(inventoryType, inventoryShape);
         _modelCollection.AddInventory(inventoryType, inventory);
         
         InventoryView inventoryView = canvasView.GetInventoryView(inventoryType);
