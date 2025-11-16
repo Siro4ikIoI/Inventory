@@ -7,35 +7,31 @@ public class InventoryPresenter
     private InventoryView _inventoryView;
 
     private ModelCollection _modelCollection;
-    private CanvasView _canvasView;
+    private ItemSettings _itemSettings;
 
     private DragAndDropModel _dragAndDropModel;
 
     public InventoryPresenter(Inventory inventory, InventoryView inventoryView, 
-                                ModelCollection modelCollection, CanvasView canvasView)
+                                ModelCollection modelCollection, ItemSettings itemSettings)
     {
         _inventory = inventory;
         _inventoryView = inventoryView;
 
         _modelCollection = modelCollection;
-        _canvasView = canvasView;
+        _itemSettings = itemSettings;
     }
 
     private void OnItemAdded(Item item, Pair position)
     {
-        ItemView itemView = _canvasView.GetItemView(item.Id);
-
-        itemView.transform.SetParent(_inventoryView.GetContainer(), true);
+        ItemView itemprefab = _itemSettings.GetItemSoByType(item.Type).item;
+        ItemView itemView = GameObject.Instantiate<ItemView>(itemprefab, _inventoryView.transform);
 
         Vector2 tablePosition = new Vector2(position.Col, Math.Abs(position.Row - _inventory.Shape.Row + 1));
         itemView.SetPosition(_inventoryView.GetLocalPosition(tablePosition));
-    }
+        itemView.SetRotation(item.GetRotation(), item.ToMatrix().GetStructure());
 
-    private void OnItemExtracted(Item item)
-    {
-        ItemView itemView = _canvasView.GetItemView(item.Id);
-
-        itemView.transform.SetParent(_canvasView.transform);
+        ItemPresenter itemPresenter = new ItemPresenter(item, itemView, _modelCollection);
+        itemPresenter.Enable();
     }
 
     private void OnCollisionWhenAdding(int[,] collisionMatrix)
@@ -46,7 +42,6 @@ public class InventoryPresenter
     public void Enable()
     {
         _inventory.ItemAdded += OnItemAdded;
-        _inventory.ItemExtracted += OnItemExtracted;
         _inventory.CollisionWhenAdding += OnCollisionWhenAdding;
 
         _modelCollection.ChangedDragAndDrop += OnDragAndDropChanged;
@@ -55,7 +50,6 @@ public class InventoryPresenter
     public void Disable()
     {
         _inventory.CollisionWhenAdding -= OnCollisionWhenAdding;
-        _inventory.ItemExtracted -= OnItemExtracted;
         _inventory.ItemAdded -= OnItemAdded;
 
         _modelCollection.ChangedDragAndDrop -= OnDragAndDropChanged;
