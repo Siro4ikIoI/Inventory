@@ -5,6 +5,7 @@ public class DragAndDropModel
     public event Action<float, float> Draged;
     public event Action EndDraged;
     public event Action InventorySetted;
+    public event Action Destroyed;
 
     private Item _item;
     public Item Item { get { return _item; } }
@@ -38,5 +39,10 @@ public class DragAndDropModel
     public void EndDrag()
     {
         EndDraged?.Invoke();
+    }
+
+    public void Destroy()
+    {
+        Destroyed?.Invoke();
     }
 }

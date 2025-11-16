@@ -7,16 +7,14 @@ public class DragAndDropPresenter
     DragAndDropView _dragAndDropView;
 
     private ModelCollection _modelCollection;
-    private CanvasView _canvasView;
 
     public DragAndDropPresenter(DragAndDropModel dragAndDropModel, DragAndDropView dragAndDropView,
-                                    ModelCollection modelCollection, CanvasView canvasView)
+                                    ModelCollection modelCollection)
     {
         _dragAndDropModel = dragAndDropModel;
         _dragAndDropView = dragAndDropView;
 
         _modelCollection = modelCollection;
-        _canvasView = canvasView;
     }
 
     private void OnBeginDrag()
@@ -39,6 +37,8 @@ public class DragAndDropPresenter
             return;
 
         sourceInventory.TryExtractItem(_dragAndDropModel.Item, out Pair position);
+        _dragAndDropView.transform.SetParent(_dragAndDropView.transform.parent.parent);
+
         _dragAndDropModel.PreviousItemInventory = sourceInventory;
         _dragAndDropModel.PreviousItemPosition = position;
         _dragAndDropModel.PreviousItemRotation = _dragAndDropModel.Item.GetRotation();
@@ -52,7 +52,7 @@ public class DragAndDropPresenter
             return;
 
         RectTransform rectTransform = (RectTransform)_dragAndDropView.transform;
-        rectTransform.anchoredPosition += delta / _canvasView.Canvas.scaleFactor;
+        rectTransform.anchoredPosition += delta / rectTransform.parent.localScale.x;
 
         _dragAndDropModel.SetInventoryAndPosition(InventoryType.NONE, new Pair(-1, -1));
 
@@ -76,12 +76,9 @@ public class DragAndDropPresenter
         }
 
         _dragAndDropModel.EndDrag();
-
-        _dragAndDropModel.PreviousItemInventory = null;
-        _dragAndDropModel.PreviousItemPosition = new Pair(-1, -1);
-        _dragAndDropModel.PreviousItemRotation = Direction.N;
-        
         _modelCollection.SetCurrentDragAndDrop(null);
+
+        _dragAndDropModel.Destroy();
     }
 
     public void Enable()
