@@ -23,8 +23,8 @@ public class DragAndDropPresenter
 
         _dragAndDropModel.SetInventoryAndPosition(InventoryType.NONE, new(-1, -1));
 
-        Inventory sourceInventory = null;
-        foreach (Inventory inventory in _modelCollection.GetAllInventories())
+        InventoryModel sourceInventory = null;
+        foreach (InventoryModel inventory in _modelCollection.GetAllInventories())
         {
             if (inventory.ContainsItem(_dragAndDropModel.Item))
             {

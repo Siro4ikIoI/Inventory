@@ -13,13 +13,13 @@ public class ItemGenerator
         _itemSettings = itemSettings;
     }
 
-    public Item CreateItem(ItemType type, int[,] blocks)
+    public ItemModel CreateItem(ItemType type, int[,] blocks)
     {
         _id++;
-        return new Item(_id, type, blocks);
+        return new ItemModel(_id, type, blocks);
     }
 
-    public List<ItemSO> GetAllowedItems(int count, Inventory inventory)
+    public List<ItemSO> GetAllowedItems(int count, InventoryModel inventory)
     {
         List<ItemSO> itemSettings = new();
 

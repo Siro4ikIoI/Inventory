@@ -1,6 +1,6 @@
 using System;
 
-public class Item : ICloneable
+public class ItemModel : ICloneable
 {
     public event Action<Direction> Rotated;
 
@@ -11,7 +11,7 @@ public class Item : ICloneable
 
     private Direction _rotation;
 
-    public Item(int id, ItemType type, int[,] blocks)
+    public ItemModel(int id, ItemType type, int[,] blocks)
     {
         Id = id;
         Type = type;
@@ -55,7 +55,7 @@ public class Item : ICloneable
 
     public object Clone()
     {
-        Item newItem = new Item(Id, Type, _blocks.GetStructure());
+        ItemModel newItem = new ItemModel(Id, Type, _blocks.GetStructure());
         newItem._rotation = _rotation;
         return newItem;
     }

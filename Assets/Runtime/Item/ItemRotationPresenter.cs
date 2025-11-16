@@ -16,7 +16,7 @@ public class ItemRotationPresenter
         if (_modelCollection.GetCurrentDragAndDrop() == null)
             return;
 
-        Item item = _modelCollection.GetCurrentDragAndDrop().Item;
+        ItemModel item = _modelCollection.GetCurrentDragAndDrop().Item;
         item.Rotate();
     }
 

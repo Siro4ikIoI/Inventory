@@ -7,16 +7,16 @@ public class DragAndDropModel
     public event Action InventorySetted;
     public event Action Destroyed;
 
-    private Item _item;
-    public Item Item { get { return _item; } }
+    private ItemModel _item;
+    public ItemModel Item { get { return _item; } }
 
-    public Inventory PreviousItemInventory { get; set; }
+    public InventoryModel PreviousItemInventory { get; set; }
 
     public InventoryType CurrentInventory { get; private set; }
 
     public (int row, int col) CurrentPosition { get; private set; }
 
-    public DragAndDropModel(Item item)
+    public DragAndDropModel(ItemModel item)
     {
         _item = item;
     }

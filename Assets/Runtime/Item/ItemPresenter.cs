@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class ItemPresenter
 {
-    private Item _item;
+    private ItemModel _item;
     private ItemView _itemView;
 
     private ModelCollection _modelCollection;
@@ -10,7 +10,7 @@ public class ItemPresenter
     private DragAndDropPresenter _dragAndDropPresenter;
     private DragAndDropModel _dragAndDropModel;
 
-    public ItemPresenter(Item item, ItemView itemView, ModelCollection modelCollection)
+    public ItemPresenter(ItemModel item, ItemView itemView, ModelCollection modelCollection)
     {
         _item = item;
         _itemView = itemView;

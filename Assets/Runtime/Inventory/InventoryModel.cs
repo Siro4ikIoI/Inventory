@@ -1,34 +1,34 @@
 using System;
 using System.Collections.Generic;
 
-public class Inventory
+public class InventoryModel
 {
-    public event Action<Item, (int row, int col)> ItemAdded;
-    public event Action<Item> ItemExtracted;
+    public event Action<ItemModel, (int row, int col)> ItemAdded;
+    public event Action<ItemModel> ItemExtracted;
     public event Action<int[,]> CollisionWhenAdding;
 
     private Dictionary<int, (int row, int col)> _positions = new();
-    private Dictionary<int, Item> _items = new();
-    private Dictionary<int, Item> _hiddenItems = new();
+    private Dictionary<int, ItemModel> _items = new();
+    private Dictionary<int, ItemModel> _hiddenItems = new();
 
     private Matrix _cells;
     public InventoryType Type { get; private set; }
     public (int row, int col) Shape { get { return _cells.Size; } }
 
-    public Inventory(InventoryType type, (int row, int col) shape)
+    public InventoryModel(InventoryType type, (int row, int col) shape)
     {
         Type = type;
         _cells = new Matrix(shape);
     }
 
-    public bool ContainsItem(Item item)
+    public bool ContainsItem(ItemModel item)
     {
         return _items.ContainsKey(item.Id);
     }
 
     public bool IsEmpty() => _items.Count == 0;
 
-    public bool TryAddItem(Item item, (int row, int col) position)
+    public bool TryAddItem(ItemModel item, (int row, int col) position)
     {
         if (!CanAddItem(item, position))
             return false;
@@ -53,7 +53,7 @@ public class Inventory
         return true;
     }
 
-    public bool TryExtractItem(Item item, out (int row, int col) position)
+    public bool TryExtractItem(ItemModel item, out (int row, int col) position)
     {
         position = new(-1, -1);
 
@@ -81,7 +81,7 @@ public class Inventory
         return true;
     }
 
-    public bool CanAddItem(Item item, (int row, int col) position)
+    public bool CanAddItem(ItemModel item, (int row, int col) position)
     {
         if (ContainsItem(item) && !_hiddenItems.ContainsKey(item.Id))
             return false;
@@ -119,7 +119,7 @@ public class Inventory
         return _cells;
     }
 
-    public void HideItem(Item item)
+    public void HideItem(ItemModel item)
     {
         if (!ContainsItem(item))
             return;
@@ -131,14 +131,14 @@ public class Inventory
         item.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, position.row, position.col);
         _cells = _cells.Substract(itemMatrix);
 
-        Item itemCopy = (Item)item.Clone();
+        ItemModel itemCopy = (ItemModel)item.Clone();
         _items[item.Id] = itemCopy;
 
         _hiddenItems.Add(item.Id, itemCopy);
         ItemExtracted?.Invoke(item);
     }
 
-    public void RestoreItem(Item item)
+    public void RestoreItem(ItemModel item)
     {
         if (!ContainsItem(item))
             return;
@@ -146,7 +146,7 @@ public class Inventory
         if (!_hiddenItems.ContainsKey(item.Id))
             return;
 
-        Item hiddenItem = _hiddenItems[item.Id];
+        ItemModel hiddenItem = _hiddenItems[item.Id];
         (int row, int col) position = _positions[item.Id];
 
         hiddenItem.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, position.row, position.col);
