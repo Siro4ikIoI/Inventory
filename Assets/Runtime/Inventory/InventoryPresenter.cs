@@ -88,18 +88,7 @@ public class InventoryPresenter
         if (!_inventoryView.IsPointInside(position))
             return;
 
-        InventoryType inventoryType = InventoryType.NONE;
-        foreach (var pair in _canvasView.GetAllInventoryViews())
-        {
-            if (pair.Value == _inventoryView)
-            {
-                inventoryType = pair.Key;
-                break;
-            }
-        }
-
-        if (inventoryType == InventoryType.NONE)
-            return;
+        InventoryType inventoryType = _inventory.Type;
 
         _inventoryView.GetTablePosition(position, out Vector2 tablePosition);
         int col = (int)tablePosition.x;

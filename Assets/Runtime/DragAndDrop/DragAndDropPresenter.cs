@@ -54,6 +54,8 @@ public class DragAndDropPresenter
         RectTransform rectTransform = (RectTransform)_dragAndDropView.transform;
         rectTransform.anchoredPosition += delta / _canvasView.Canvas.scaleFactor;
 
+        _dragAndDropModel.SetInventoryAndPosition(InventoryType.NONE, new Pair(-1, -1));
+
         Vector3 worldPosition = rectTransform.position;
         _dragAndDropModel.Drag(worldPosition.x, worldPosition.y);
     }
