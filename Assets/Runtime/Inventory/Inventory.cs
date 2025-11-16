@@ -9,6 +9,7 @@ public class Inventory
     public event Action<int[,]> CollisionWhenAdding;
 
     private Dictionary<Item, Pair> _items = new();
+    private Dictionary<int, Item> _hiddenItems = new();
 
     private Matrix _cells;
     public InventoryType Type { get; private set; }
@@ -29,7 +30,9 @@ public class Inventory
 
     public bool TryAddItem(Item item, Pair position)
     {
-        if (ContainsItem(item))
+        bool isHidden = _hiddenItems.ContainsKey(item.Id);
+
+        if (!isHidden && ContainsItem(item))
             return false;
 
         bool isItemInBorder = item.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, position.Row, position.Col);
@@ -40,10 +43,19 @@ public class Inventory
         if (newCells.Max() > (int)CellType.FILL)
             return false;
 
-        _items.Add(item, position);
         _cells = newCells;
 
-        ItemAdded?.Invoke(item, position);
+        if (isHidden)
+        {
+            _items[item] = position;
+            _hiddenItems.Remove(item.Id);
+        }
+        else
+        {
+            _items.Add(item, position);
+            ItemAdded?.Invoke(item, position);
+        }
+
         return true;
     }
 
@@ -55,8 +67,19 @@ public class Inventory
             return false;
 
         position = _items[item];
-        item.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, position.Row, position.Col);
-        _cells = _cells.Substract(itemMatrix);
+
+        bool isHidden = _hiddenItems.ContainsKey(item.Id);
+
+        if (!isHidden)
+        {
+            item.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, position.Row, position.Col);
+            _cells = _cells.Substract(itemMatrix);
+        }
+        else
+        {
+            _hiddenItems.Remove(item.Id);
+        }
+
         _items.Remove(item);
 
         ItemExtracted?.Invoke(item);
@@ -65,7 +88,7 @@ public class Inventory
 
     public bool CanAddItem(Item item, Pair position)
     {
-        if (_items.ContainsKey(item))
+        if (_items.ContainsKey(item) && !_hiddenItems.ContainsKey(item.Id))
             return false;
 
         Matrix itemMatrix = item.ToMatrix();
@@ -98,5 +121,35 @@ public class Inventory
     public Matrix ToMatrix()
     {
         return _cells;
+    }
+
+    public void HideItem(Item item)
+    {
+        if (!_items.ContainsKey(item))
+            return;
+
+        if (_hiddenItems.ContainsKey(item.Id))
+            return;
+
+        Pair position = _items[item];
+        item.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, position.Row, position.Col);
+        _cells = _cells.Substract(itemMatrix);
+
+        _hiddenItems.Add(item.Id, item);
+    }
+
+    public void RestoreItem(Item item)
+    {
+        if (!_items.ContainsKey(item))
+            return;
+
+        if (!_hiddenItems.ContainsKey(item.Id))
+            return;
+
+        Pair position = _items[item];
+        item.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, position.Row, position.Col);
+        _cells = _cells.Add(itemMatrix);
+
+        _hiddenItems.Remove(item.Id);
     }
 }
