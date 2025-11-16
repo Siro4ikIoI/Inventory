@@ -48,7 +48,7 @@ public class InventoryHighlightPresenter
 
     private void ResetAllHighlights()
     {
-        Item emptyItem = new Item(-1, new int[1, 1] { { 0 } });
+        Item emptyItem = new Item(-1, ItemType.GRANADE, new int[1, 1] { { 0 } });
         foreach (var inventory in _modelCollection.GetAllInventories())
         {
             inventory.CanAddItem(emptyItem, new Pair(0, 0));
