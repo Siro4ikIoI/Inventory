@@ -84,29 +84,6 @@ public class DragAndDropPresenter
         _modelCollection.SetCurrentDragAndDrop(null);
     }
 
-    private InventoryType GetInventoryAtScreenPosition(Vector2 screenPosition)
-    {
-        InventoryType inventoryType = InventoryType.NONE;
-
-        foreach (var inventoryPair in _canvasView.GetAllInventoryViews())
-        {
-            if (inventoryPair.Value.IsPointInside(screenPosition))
-            {
-                inventoryType = inventoryPair.Key;
-            }
-        }
-
-        return inventoryType;
-    }
-
-    private Pair GetItemPosition(Vector2 position, Inventory inventory, InventoryView inventoryView)
-    {
-        inventoryView.GetTablePosition(position, out Vector2 tablePosition);
-        int col = (int)tablePosition.x;
-        int row = (int)(inventory.Shape.Row - tablePosition.y - 1);
-        return new Pair(row, col);
-    }
-
     public void Enable()
     {
         _dragAndDropView.ItemBeginDrag += OnBeginDrag;
