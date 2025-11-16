@@ -90,8 +90,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a6f32ac40d9e5f4685f6c1a6749e3e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockColor: {r: 0, g: 0, b: 0, a: 0}
-  blockAlpha: 0.5
+  _blockColor: {r: 0, g: 0, b: 0, a: 0}
+  _blockAlpha: 0.5
+  _grid: {fileID: 8290044431159967733}
 --- !u!1 &4161921139107038774
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,10 +323,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae488df7c2f671b4fab9f88afc09c447, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  iconImage: {fileID: 1881308967794673730}
-  rectTransform: {fileID: 6246945516125941407}
-  blocksWrapper: {fileID: 6167093320919405109}
-  dragAndDrop: {fileID: 4407468176133105994}
+  _iconImage: {fileID: 1881308967794673730}
+  _rectTransform: {fileID: 6246945516125941407}
+  _blocksWrapper: {fileID: 6167093320919405109}
+  _dragAndDrop: {fileID: 4407468176133105994}
 --- !u!114 &4407468176133105994
 MonoBehaviour:
   m_ObjectHideFlags: 0

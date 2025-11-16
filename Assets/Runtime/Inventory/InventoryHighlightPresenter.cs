@@ -46,10 +46,10 @@ public class InventoryHighlightPresenter
 
     private void ResetAllHighlights()
     {
-        Item emptyItem = new Item(-1, ItemType.GRANADE, new int[1, 1] { { 0 } });
+        ItemModel emptyItem = new ItemModel(-1, ItemType.GRANADE, new int[1, 1] { { 0 } });
         foreach (var inventory in _modelCollection.GetAllInventories())
         {
-            inventory.CanAddItem(emptyItem, new (0, 0));
+            inventory.CanAddItem(emptyItem, new(0, 0));
         }
     }
 
@@ -62,7 +62,7 @@ public class InventoryHighlightPresenter
             return;
         }
 
-        Inventory inventory = _modelCollection.GetInventory(inventoryType);
+        InventoryModel inventory = _modelCollection.GetInventory(inventoryType);
         (int row, int col) itemPosition = _dragAndDropModel.CurrentPosition;
 
         inventory.CanAddItem(_dragAndDropModel.Item, itemPosition);

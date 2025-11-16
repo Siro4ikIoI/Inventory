@@ -16,10 +16,10 @@ public class GameState
 
     public event Action<int> ScoreChanged;
 
-    public void AddScore(Item item)
+    public void AddScore(ItemModel item)
     {
         if (_scoredItems.Contains(item.Id))
-            return; // Очки за этот предмет уже начислены
+            return; // РћС‡РєРё Р·Р° СЌС‚РѕС‚ РїСЂРµРґРјРµС‚ СѓР¶Рµ РЅР°С‡РёСЃР»РµРЅС‹
 
         int points = CalculatePoints(item);
         _score += points;
@@ -27,13 +27,13 @@ public class GameState
         ScoreChanged?.Invoke(_score);
     }
 
-    private int CalculatePoints(Item item)
+    private int CalculatePoints(ItemModel item)
     {
         int filledCells = CountFilledCells(item);
         return filledCells * POINTS_PER_CELL;
     }
 
-    private int CountFilledCells(Item item)
+    private int CountFilledCells(ItemModel item)
     {
         Matrix matrix = item.ToMatrix();
         int count = 0;

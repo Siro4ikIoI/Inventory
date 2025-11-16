@@ -6,7 +6,7 @@ public class CellView : MonoBehaviour
 {
     [SerializeField] private Image _backgroundImage;
 
-    private Dictionary<CellViewState, Color> stateToColor = new()
+    private Dictionary<CellViewState, Color> _stateToColor = new()
     {
         { CellViewState.NORMAL, Color.white },
         { CellViewState.VALID, Color.green },
@@ -15,11 +15,11 @@ public class CellView : MonoBehaviour
 
     public void SetHighlight(int state)
     {
-        _backgroundImage.color = stateToColor[(CellViewState)state];
+        _backgroundImage.color = _stateToColor[(CellViewState)state];
     }
 
     public void ResetHighlight()
     {
-        _backgroundImage.color = stateToColor[CellViewState.NORMAL];
+        _backgroundImage.color = _stateToColor[CellViewState.NORMAL];
     }
 }

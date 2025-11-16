@@ -13,13 +13,13 @@ public class ItemGenerator
         _itemSettings = itemSettings;
     }
 
-    public Item CreateItem(ItemType type, int[,] blocks)
+    public ItemModel CreateItem(ItemType type, int[,] blocks)
     {
         _id++;
-        return new Item(_id, type, blocks);
+        return new ItemModel(_id, type, blocks);
     }
 
-    public List<ItemSO> GetAllowedItems(int count, Inventory inventory)
+    public List<ItemSO> GetAllowedItems(int count, InventoryModel inventory)
     {
         List<ItemSO> itemSettings = new();
 
@@ -29,7 +29,7 @@ public class ItemGenerator
         {
             bool placed = false;
             List<ItemSO> items = _itemSettings.items.OrderBy(_ => Random.value).ToList();
-                        
+
             for (int attempt = 0; attempt < items.Count && !placed; attempt++)
             {
                 ItemSO itemSO = items[attempt];
@@ -44,7 +44,7 @@ public class ItemGenerator
                     workingMatrix = workingMatrix.Add(itemMatrix);
 
                     placed = true;
-                }                
+                }
             }
         }
 
@@ -53,7 +53,7 @@ public class ItemGenerator
 
     private bool TryFindFreePosition(Matrix item, Matrix inventory, out (int row, int col) foundPosition)
     {
-        foundPosition = new (0, 0);
+        foundPosition = new(0, 0);
 
         for (int row = 0; row < inventory.Size.row; row++)
         {
@@ -66,7 +66,7 @@ public class ItemGenerator
                 Matrix newCells = inventory.Add(itemMatrix);
                 if (newCells.Max() <= (int)CellType.FILL)
                 {
-                    foundPosition = new (row, col);
+                    foundPosition = new(row, col);
                     return true;
                 }
             }

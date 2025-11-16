@@ -13,7 +13,6 @@ public class DragAndDropView : MonoBehaviour, IBeginDragHandler, IDragHandler, I
         ItemBeginDrag?.Invoke();
     }
 
-    // rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
     public void OnDrag(PointerEventData eventData)
     {
         ItemDragging?.Invoke(eventData.delta);
@@ -21,7 +20,6 @@ public class DragAndDropView : MonoBehaviour, IBeginDragHandler, IDragHandler, I
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        // Вызываем событие с экранными координатами
         ItemDropped?.Invoke();
     }
 }

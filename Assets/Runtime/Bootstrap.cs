@@ -1,23 +1,19 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class Bootstrap : MonoBehaviour
 {
     [Header("Inventories")]
-    [SerializeField] InventoryView inventory;
-    [SerializeField] InventoryView caseInventory;
+    [SerializeField] private InventoryView _inventory;
+    [SerializeField] private InventoryView _caseInventory;
 
     [Header("Item Settings")]
-    [SerializeField] ItemSettings itemSettings;
+    [SerializeField] private ItemSettings _itemSettings;
 
     [Header("Input")]
-    [SerializeField] InputHandler input;
+    [SerializeField] private InputHandler _input;
 
     [Header("UI")]
-    [SerializeField] ScoreView scoreView;
+    [SerializeField] private ScoreView _scoreView;
 
     private ModelCollection _modelCollection;
 
@@ -32,15 +28,15 @@ public class Bootstrap : MonoBehaviour
     {
         _modelCollection = new ModelCollection();
 
-        _inventoryPresenter = CreateInventoryPresenter(InventoryType.INVENTARY, new (5, 9), inventory);
-        _caseInventoryPresenter = CreateInventoryPresenter(InventoryType.CASE, new (7, 4), caseInventory);
+        _inventoryPresenter = CreateInventoryPresenter(InventoryType.INVENTARY, new(5, 9), _inventory);
+        _caseInventoryPresenter = CreateInventoryPresenter(InventoryType.CASE, new(7, 4), _caseInventory);
 
-        ItemGenerator itemGenerator = new ItemGenerator(itemSettings);
+        ItemGenerator itemGenerator = new ItemGenerator(_itemSettings);
         _itemGenerationPresenter = new ItemGenerationPresenter(itemGenerator, _modelCollection);
 
-        _itemRotationPresenter = new ItemRotationPresenter(input, _modelCollection);
+        _itemRotationPresenter = new ItemRotationPresenter(_input, _modelCollection);
         _inventoryHighlightPresenter = new InventoryHighlightPresenter(_modelCollection);
-        _scorePresenter = new ScorePresenter(new GameState(), scoreView, _modelCollection);
+        _scorePresenter = new ScorePresenter(new GameState(), _scoreView, _modelCollection);
 
         _inventoryPresenter.Enable();
         _caseInventoryPresenter.Enable();
@@ -52,12 +48,12 @@ public class Bootstrap : MonoBehaviour
 
     private InventoryPresenter CreateInventoryPresenter(InventoryType inventoryType, (int row, int col) inventoryShape, InventoryView inventoryView)
     {
-        Inventory inventory = new Inventory(inventoryType, inventoryShape);
+        InventoryModel inventory = new InventoryModel(inventoryType, inventoryShape);
         _modelCollection.AddInventory(inventoryType, inventory);
 
         inventoryView.SetShape(inventory.Shape.row, inventory.Shape.col);
-        
-        return new InventoryPresenter(inventory, inventoryView, _modelCollection, itemSettings);
+
+        return new InventoryPresenter(inventory, inventoryView, _modelCollection, _itemSettings);
     }
 
     private void OnDestroy()

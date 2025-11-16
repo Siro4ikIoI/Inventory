@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class InventoryPresenter
 {
-    private Inventory _inventory;
+    private InventoryModel _inventory;
     private InventoryView _inventoryView;
 
     private ModelCollection _modelCollection;
@@ -11,7 +11,7 @@ public class InventoryPresenter
 
     private DragAndDropModel _dragAndDropModel;
 
-    public InventoryPresenter(Inventory inventory, InventoryView inventoryView, 
+    public InventoryPresenter(InventoryModel inventory, InventoryView inventoryView,
                                 ModelCollection modelCollection, ItemSettings itemSettings)
     {
         _inventory = inventory;
@@ -21,7 +21,7 @@ public class InventoryPresenter
         _itemSettings = itemSettings;
     }
 
-    private void OnItemAdded(Item item, (int row, int col) position)
+    private void OnItemAdded(ItemModel item, (int row, int col) position)
     {
         ItemView itemprefab = _itemSettings.GetItemSoByType(item.Type).item;
         ItemView itemView = GameObject.Instantiate<ItemView>(itemprefab, _inventoryView.transform);
@@ -87,7 +87,7 @@ public class InventoryPresenter
         _inventoryView.GetTablePosition(position, out Vector2 tablePosition);
         int col = (int)tablePosition.x;
         int row = (int)(_inventory.Shape.row - tablePosition.y - 1);
-        (int row, int col) cellPosition = new (row, col);
+        (int row, int col) cellPosition = new(row, col);
 
         _dragAndDropModel.SetInventoryAndPosition(inventoryType, cellPosition);
     }

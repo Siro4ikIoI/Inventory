@@ -13,7 +13,7 @@ public class Matrix
 
     public (int row, int col) Size
     {
-        get => new (_matrix.GetLength(0), _matrix.GetLength(1));
+        get => new(_matrix.GetLength(0), _matrix.GetLength(1));
     }
 
     public Matrix((int row, int col) shape)
@@ -21,7 +21,7 @@ public class Matrix
         _matrix = new int[shape.row, shape.col];
     }
 
-    public Matrix(int [,] values)
+    public Matrix(int[,] values)
     {
         _matrix = values.Clone() as int[,];
     }
@@ -64,7 +64,7 @@ public class Matrix
             int newi = i + OffestRow;
             if (newi < 0 || newi >= result.Size.row)
                 return false;
-            
+
             for (int j = 0; j < Size.col; j++)
             {
                 int newj = j + OffsetCol;
@@ -113,7 +113,7 @@ public class Matrix
 
     public int[,] GetStructure()
     {
-        return (int[,]) _matrix.Clone();
+        return (int[,])_matrix.Clone();
     }
 
     public Matrix Rotate()

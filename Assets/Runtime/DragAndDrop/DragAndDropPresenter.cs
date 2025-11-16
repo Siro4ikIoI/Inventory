@@ -1,10 +1,9 @@
-using System;
 using UnityEngine;
 
 public class DragAndDropPresenter
 {
-    DragAndDropModel _dragAndDropModel;
-    DragAndDropView _dragAndDropView;
+    private DragAndDropModel _dragAndDropModel;
+    private DragAndDropView _dragAndDropView;
 
     private ModelCollection _modelCollection;
 
@@ -22,10 +21,10 @@ public class DragAndDropPresenter
         if (_modelCollection.GetCurrentDragAndDrop() != null)
             return;
 
-        _dragAndDropModel.SetInventoryAndPosition(InventoryType.NONE, new (-1, -1));
+        _dragAndDropModel.SetInventoryAndPosition(InventoryType.NONE, new(-1, -1));
 
-        Inventory sourceInventory = null;
-        foreach (Inventory inventory in _modelCollection.GetAllInventories())
+        InventoryModel sourceInventory = null;
+        foreach (InventoryModel inventory in _modelCollection.GetAllInventories())
         {
             if (inventory.ContainsItem(_dragAndDropModel.Item))
             {
@@ -51,13 +50,13 @@ public class DragAndDropPresenter
         RectTransform rectTransform = (RectTransform)_dragAndDropView.transform;
         rectTransform.anchoredPosition += delta / rectTransform.parent.localScale.x;
 
-        _dragAndDropModel.SetInventoryAndPosition(InventoryType.NONE, new (-1, -1));
+        _dragAndDropModel.SetInventoryAndPosition(InventoryType.NONE, new(-1, -1));
 
         Vector3 worldPosition = rectTransform.position;
         _dragAndDropModel.Drag(worldPosition.x, worldPosition.y);
     }
 
-    private void OnEndDrag() 
+    private void OnEndDrag()
     {
         if (_modelCollection.GetCurrentDragAndDrop() != _dragAndDropModel)
             return;
@@ -65,7 +64,7 @@ public class DragAndDropPresenter
         InventoryType inventoryType = _dragAndDropModel.CurrentInventory;
         (int row, int col) itemPosition = _dragAndDropModel.CurrentPosition;
 
-        if (inventoryType != InventoryType.NONE 
+        if (inventoryType != InventoryType.NONE
             && _modelCollection.GetInventory(inventoryType).CanAddItem(_dragAndDropModel.Item, itemPosition))
         {
             _dragAndDropModel.PreviousItemInventory.TryExtractItem(_dragAndDropModel.Item, out _);
