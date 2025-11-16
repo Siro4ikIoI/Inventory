@@ -8,7 +8,8 @@ public class Inventory
     public event Action<Item> ItemExtracted;
     public event Action<int[,]> CollisionWhenAdding;
 
-    private Dictionary<Item, Pair> _items = new();
+    private Dictionary<int, Pair> _positions = new();
+    private Dictionary<int, Item> _items = new();
     private Dictionary<int, Item> _hiddenItems = new();
 
     private Matrix _cells;
@@ -23,39 +24,33 @@ public class Inventory
 
     public bool ContainsItem(Item item)
     {
-        return _items.Keys.Contains(item);
+        return _items.ContainsKey(item.Id);
     }
 
     public bool IsEmpty() => _items.Count == 0;
 
     public bool TryAddItem(Item item, Pair position)
     {
+        if (!CanAddItem(item, position))
+            return false;
+
+        item.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, position.Row, position.Col);
+        _cells = _cells.Add(itemMatrix);
+
         bool isHidden = _hiddenItems.ContainsKey(item.Id);
-
-        if (!isHidden && ContainsItem(item))
-            return false;
-
-        bool isItemInBorder = item.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, position.Row, position.Col);
-        if (!isItemInBorder)
-            return false;
-
-        Matrix newCells = _cells.Add(itemMatrix);
-        if (newCells.Max() > (int)CellType.FILL)
-            return false;
-
-        _cells = newCells;
-
         if (isHidden)
         {
-            _items[item] = position;
+            _items[item.Id] = item;
+            _positions[item.Id] = position;
             _hiddenItems.Remove(item.Id);
         }
         else
         {
-            _items.Add(item, position);
-            ItemAdded?.Invoke(item, position);
+            _items.Add(item.Id, item);
+            _positions.Add(item.Id, position);
         }
 
+        ItemAdded?.Invoke(item, position);
         return true;
     }
 
@@ -66,7 +61,7 @@ public class Inventory
         if (!ContainsItem(item))
             return false;
 
-        position = _items[item];
+        position = _positions[item.Id];
 
         bool isHidden = _hiddenItems.ContainsKey(item.Id);
 
@@ -80,7 +75,8 @@ public class Inventory
             _hiddenItems.Remove(item.Id);
         }
 
-        _items.Remove(item);
+        _items.Remove(item.Id);
+        _positions.Remove(item.Id);
 
         ItemExtracted?.Invoke(item);
         return true;
@@ -88,7 +84,7 @@ public class Inventory
 
     public bool CanAddItem(Item item, Pair position)
     {
-        if (_items.ContainsKey(item) && !_hiddenItems.ContainsKey(item.Id))
+        if (ContainsItem(item) && !_hiddenItems.ContainsKey(item.Id))
             return false;
 
         Matrix itemMatrix = item.ToMatrix();
@@ -115,7 +111,8 @@ public class Inventory
 
         new Matrix(sumArray).Reshape(Shape, out Matrix collisionMatrix, position.Row, position.Col);
         CollisionWhenAdding?.Invoke(collisionMatrix.GetStructure());
-        return collisionMatrix.Max() > (int)CellType.FILL;
+        
+        return collisionMatrix.Max() <= (int)CellType.FILL;
     }
 
     public Matrix ToMatrix()
@@ -125,31 +122,38 @@ public class Inventory
 
     public void HideItem(Item item)
     {
-        if (!_items.ContainsKey(item))
+        if (!ContainsItem(item))
             return;
 
         if (_hiddenItems.ContainsKey(item.Id))
             return;
 
-        Pair position = _items[item];
+        Pair position = _positions[item.Id];
         item.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, position.Row, position.Col);
         _cells = _cells.Substract(itemMatrix);
 
-        _hiddenItems.Add(item.Id, item);
+        Item itemCopy = new Item(item.Id, item.ToMatrix().GetStructure());
+        itemCopy.SetRotation(item.GetRotation());
+        _items[item.Id] = itemCopy;
+
+        _hiddenItems.Add(item.Id, itemCopy);
+        ItemExtracted?.Invoke(item);
     }
 
     public void RestoreItem(Item item)
     {
-        if (!_items.ContainsKey(item))
+        if (!ContainsItem(item))
             return;
 
         if (!_hiddenItems.ContainsKey(item.Id))
             return;
 
-        Pair position = _items[item];
+        Pair position = _positions[item.Id];
         item.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, position.Row, position.Col);
         _cells = _cells.Add(itemMatrix);
 
+        Item hiddenItem = _hiddenItems[item.Id];
         _hiddenItems.Remove(item.Id);
+        ItemAdded?.Invoke(hiddenItem, position);
     }
 }
