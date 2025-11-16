@@ -105,22 +105,6 @@ public class InventoryView : MonoBehaviour
         }
     }
 
-    public void ResetHighlight()
-    {
-        if (cells == null) return;
-
-        for (int i = 0; i < Row; i++)
-        {
-            for (int j = 0; j < Col; j++)
-            {
-                if (cells[i, j] != null)
-                {
-                    cells[i, j].ResetHighlight();
-                }
-            }
-        }
-    }
-
     public RectTransform GetContainer()
     {
         return inventoryArea;
