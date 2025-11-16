@@ -128,7 +128,7 @@ public class Inventory
         if (_hiddenItems.ContainsKey(item.Id))
             return;
 
-        Pair position = _positions[item.Id];
+        (int row, int col) position = _positions[item.Id];
         item.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, position.row, position.col);
         _cells = _cells.Substract(itemMatrix);
 
@@ -148,7 +148,7 @@ public class Inventory
             return;
 
         Item hiddenItem = _hiddenItems[item.Id];
-        Pair position = _positions[item.Id];
+        (int row, int col) position = _positions[item.Id];
 
         hiddenItem.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, position.row, position.col);
         _cells = _cells.Add(itemMatrix);
