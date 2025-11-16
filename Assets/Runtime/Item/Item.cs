@@ -7,12 +7,14 @@ public class Item
     private Matrix _blocks;
 
     public int Id { get; private set; }
+    public ItemType Type { get; private set; }
 
     private Direction _rotation;
 
-    public Item(int id, int[,] blocks)
+    public Item(int id, ItemType type, int[,] blocks)
     {
         Id = id;
+        Type = type;
         _blocks = new(blocks);
         _rotation = Direction.N;
     }

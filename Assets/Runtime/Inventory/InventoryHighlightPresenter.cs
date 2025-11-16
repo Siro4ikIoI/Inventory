@@ -1,14 +1,12 @@
 public class InventoryHighlightPresenter
 {
     private ModelCollection _modelCollection;
-    private CanvasView _canvasView;
 
     private DragAndDropModel _dragAndDropModel;
 
-    public InventoryHighlightPresenter(ModelCollection modelCollection, CanvasView canvasView)
+    public InventoryHighlightPresenter(ModelCollection modelCollection)
     {
         _modelCollection = modelCollection;
-        _canvasView = canvasView;
     }
 
     private void OnDragAndDropChanged(DragAndDropModel dragAndDropModel)
@@ -48,7 +46,7 @@ public class InventoryHighlightPresenter
 
     private void ResetAllHighlights()
     {
-        Item emptyItem = new Item(-1, new int[1, 1] { { 0 } });
+        Item emptyItem = new Item(-1, ItemType.GRANADE, new int[1, 1] { { 0 } });
         foreach (var inventory in _modelCollection.GetAllInventories())
         {
             inventory.CanAddItem(emptyItem, new Pair(0, 0));

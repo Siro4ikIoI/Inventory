@@ -4,41 +4,41 @@ using UnityEngine;
 
 public class ItemGenerator
 {
-    private ItemSO _itemSO;
+    private ItemSettings _itemSettings;
 
     private int _id = 0;
 
-    public ItemGenerator(ItemSO itemSO)
+    public ItemGenerator(ItemSettings itemSettings)
     {
-        _itemSO = itemSO;
+        _itemSettings = itemSettings;
     }
 
-    public Item CreateItem(int[,] blocks)
+    public Item CreateItem(ItemType type, int[,] blocks)
     {
         _id++;
-        return new Item(_id, blocks);
+        return new Item(_id, type, blocks);
     }
 
-    public List<ItemSettings> GetAllowedItems(int count, Inventory inventory)
+    public List<ItemSO> GetAllowedItems(int count, Inventory inventory)
     {
-        List<ItemSettings> itemSettings = new();
+        List<ItemSO> itemSettings = new();
 
         Matrix workingMatrix = new Matrix(inventory.ToMatrix().GetStructure());
 
         for (int i = 0; i < count; i++)
         {
             bool placed = false;
-            List<ItemSettings> items = _itemSO.items.OrderBy(_ => Random.value).ToList();
+            List<ItemSO> items = _itemSettings.items.OrderBy(_ => Random.value).ToList();
                         
             for (int attempt = 0; attempt < items.Count && !placed; attempt++)
             {
-                ItemSettings itemSetting = items[attempt];
+                ItemSO itemSO = items[attempt];
 
-                Matrix itemMatrix = new Matrix(itemSetting.GetStructure());
+                Matrix itemMatrix = new Matrix(itemSO.GetStructure());
 
                 if (TryFindFreePosition(itemMatrix, workingMatrix, out var actualPos))
                 {
-                    itemSettings.Add(itemSetting);
+                    itemSettings.Add(itemSO);
 
                     itemMatrix.Reshape(workingMatrix.Size, out itemMatrix, actualPos.Row, actualPos.Col);
                     workingMatrix = workingMatrix.Add(itemMatrix);

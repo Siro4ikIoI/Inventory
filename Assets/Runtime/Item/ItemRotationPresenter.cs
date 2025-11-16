@@ -3,14 +3,12 @@ public class ItemRotationPresenter
     private InputHandler _input;
 
     private ModelCollection _modelCollection;
-    private CanvasView _canvasView;
 
-    public ItemRotationPresenter(InputHandler input, ModelCollection modelCollection, CanvasView canvasView)
+    public ItemRotationPresenter(InputHandler input, ModelCollection modelCollection)
     {
         _input = input;
 
         _modelCollection = modelCollection;
-        _canvasView = canvasView;
     }
 
     private void OnRightClicked()

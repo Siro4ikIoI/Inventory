@@ -4,16 +4,13 @@ public class ScorePresenter
     private ScoreView _scoreView;
 
     private ModelCollection _modelCollection;
-    private CanvasView _canvasView;
 
-    public ScorePresenter(GameState gameState, ScoreView scoreView,
-                                    ModelCollection modelCollection, CanvasView canvasView)
+    public ScorePresenter(GameState gameState, ScoreView scoreView, ModelCollection modelCollection)
     {
         _gameState = gameState;
         _scoreView = scoreView;
 
         _modelCollection = modelCollection;
-        _canvasView = canvasView;
     }
 
     private void OnScoreChanged(int score)
