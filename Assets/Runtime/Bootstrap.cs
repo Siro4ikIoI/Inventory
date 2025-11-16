@@ -27,6 +27,7 @@ public class Bootstrap : MonoBehaviour
     private void Start()
     {
         _modelCollection = new ModelCollection();
+        _modelCollection.SetDragAndDropContainer(new DragAndDropContainer());
 
         _inventoryPresenter = CreateInventoryPresenter(InventoryType.INVENTARY, new(5, 9), _inventory);
         _caseInventoryPresenter = CreateInventoryPresenter(InventoryType.CASE, new(7, 4), _caseInventory);

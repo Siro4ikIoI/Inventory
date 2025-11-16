@@ -13,10 +13,10 @@ public class ItemRotationPresenter
 
     private void OnRightClicked()
     {
-        if (_modelCollection.GetCurrentDragAndDrop() == null)
+        if (_modelCollection.GetDragAndDrop() == null)
             return;
 
-        ItemModel item = _modelCollection.GetCurrentDragAndDrop().Item;
+        ItemModel item = _modelCollection.GetDragAndDrop().GetCurrentDragAndDrop().Item;
         item.Rotate();
     }
 

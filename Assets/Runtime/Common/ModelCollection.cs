@@ -3,8 +3,6 @@ using System.Collections.Generic;
 
 public class ModelCollection
 {
-    public event Action<DragAndDropModel> ChangedDragAndDrop;
-
     private Dictionary<InventoryType, InventoryModel> _inventories = new();
     public InventoryModel GetInventory(InventoryType type)
     {
@@ -21,16 +19,15 @@ public class ModelCollection
         return _inventories.Values;
     }
 
-    private DragAndDropModel _currentDragAndDrop = null;
+    private DragAndDropContainer _dragAndDropContainer = null;
 
-    public void SetCurrentDragAndDrop(DragAndDropModel dragAndDropModel)
+    public void SetDragAndDropContainer(DragAndDropContainer dragAndDropContainer)
     {
-        _currentDragAndDrop = dragAndDropModel;
-        ChangedDragAndDrop?.Invoke(_currentDragAndDrop);
+        _dragAndDropContainer = dragAndDropContainer;
     }
 
-    public DragAndDropModel GetCurrentDragAndDrop()
+    public DragAndDropContainer GetDragAndDrop()
     {
-        return _currentDragAndDrop;
+        return _dragAndDropContainer;
     }
 }

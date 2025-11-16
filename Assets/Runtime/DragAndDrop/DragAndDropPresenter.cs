@@ -18,7 +18,7 @@ public class DragAndDropPresenter
 
     private void OnBeginDrag()
     {
-        if (_modelCollection.GetCurrentDragAndDrop() != null)
+        if (_modelCollection.GetDragAndDrop().GetCurrentDragAndDrop() != null)
             return;
 
         _dragAndDropModel.SetInventoryAndPosition(InventoryType.NONE, new(-1, -1));
@@ -39,12 +39,12 @@ public class DragAndDropPresenter
         _dragAndDropView.transform.SetParent(_dragAndDropView.transform.parent.parent);
         _dragAndDropModel.PreviousItemInventory = sourceInventory;
 
-        _modelCollection.SetCurrentDragAndDrop(_dragAndDropModel);
+        _modelCollection.GetDragAndDrop().SetCurrentDragAndDrop(_dragAndDropModel);
     }
 
     private void OnDrag(Vector2 delta)
     {
-        if (_modelCollection.GetCurrentDragAndDrop() != _dragAndDropModel)
+        if (_modelCollection.GetDragAndDrop().GetCurrentDragAndDrop() != _dragAndDropModel)
             return;
 
         RectTransform rectTransform = (RectTransform)_dragAndDropView.transform;
@@ -58,7 +58,7 @@ public class DragAndDropPresenter
 
     private void OnEndDrag()
     {
-        if (_modelCollection.GetCurrentDragAndDrop() != _dragAndDropModel)
+        if (_modelCollection.GetDragAndDrop().GetCurrentDragAndDrop() != _dragAndDropModel)
             return;
 
         InventoryType inventoryType = _dragAndDropModel.CurrentInventory;
@@ -76,7 +76,7 @@ public class DragAndDropPresenter
         }
 
         _dragAndDropModel.EndDrag();
-        _modelCollection.SetCurrentDragAndDrop(null);
+        _modelCollection.GetDragAndDrop().SetCurrentDragAndDrop(null);
 
         _dragAndDropModel.Destroy();
     }

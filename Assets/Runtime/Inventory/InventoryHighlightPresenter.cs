@@ -70,11 +70,11 @@ public class InventoryHighlightPresenter
 
     public void Enable()
     {
-        _modelCollection.ChangedDragAndDrop += OnDragAndDropChanged;
+        _modelCollection.GetDragAndDrop().ChangedDragAndDrop += OnDragAndDropChanged;
     }
 
     public void Disable()
     {
-        _modelCollection.ChangedDragAndDrop -= OnDragAndDropChanged;
+        _modelCollection.GetDragAndDrop().ChangedDragAndDrop -= OnDragAndDropChanged;
     }
 }
