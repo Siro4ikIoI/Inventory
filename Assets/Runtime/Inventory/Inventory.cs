@@ -132,8 +132,7 @@ public class Inventory
         item.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, position.Row, position.Col);
         _cells = _cells.Substract(itemMatrix);
 
-        Item itemCopy = new Item(item.Id, item.ToMatrix().GetStructure());
-        itemCopy.SetRotation(item.GetRotation());
+        Item itemCopy = (Item)item.Clone();
         _items[item.Id] = itemCopy;
 
         _hiddenItems.Add(item.Id, itemCopy);
@@ -148,12 +147,13 @@ public class Inventory
         if (!_hiddenItems.ContainsKey(item.Id))
             return;
 
+        Item hiddenItem = _hiddenItems[item.Id];
         Pair position = _positions[item.Id];
-        item.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, position.Row, position.Col);
+
+        hiddenItem.ToMatrix().Reshape(_cells.Size, out Matrix itemMatrix, position.Row, position.Col);
         _cells = _cells.Add(itemMatrix);
 
-        Item hiddenItem = _hiddenItems[item.Id];
-        _hiddenItems.Remove(item.Id);
+        _hiddenItems.Remove(hiddenItem.Id);
         ItemAdded?.Invoke(hiddenItem, position);
     }
 }
