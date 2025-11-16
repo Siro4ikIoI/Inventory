@@ -44,7 +44,7 @@ public class InventoryPresenter
         _inventory.ItemAdded += OnItemAdded;
         _inventory.CollisionWhenAdding += OnCollisionWhenAdding;
 
-        _modelCollection.ChangedDragAndDrop += OnDragAndDropChanged;
+        _modelCollection.GetDragAndDrop().ChangedDragAndDrop  += OnDragAndDropChanged;
     }
 
     public void Disable()
@@ -52,7 +52,7 @@ public class InventoryPresenter
         _inventory.CollisionWhenAdding -= OnCollisionWhenAdding;
         _inventory.ItemAdded -= OnItemAdded;
 
-        _modelCollection.ChangedDragAndDrop -= OnDragAndDropChanged;
+        _modelCollection.GetDragAndDrop().ChangedDragAndDrop -= OnDragAndDropChanged;
         if (_dragAndDropModel != null)
         {
             _dragAndDropModel.Draged -= OnDragged;
