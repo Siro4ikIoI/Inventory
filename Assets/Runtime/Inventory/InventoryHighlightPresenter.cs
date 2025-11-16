@@ -1,14 +1,12 @@
 public class InventoryHighlightPresenter
 {
     private ModelCollection _modelCollection;
-    private CanvasView _canvasView;
 
     private DragAndDropModel _dragAndDropModel;
 
-    public InventoryHighlightPresenter(ModelCollection modelCollection, CanvasView canvasView)
+    public InventoryHighlightPresenter(ModelCollection modelCollection)
     {
         _modelCollection = modelCollection;
-        _canvasView = canvasView;
     }
 
     private void OnDragAndDropChanged(DragAndDropModel dragAndDropModel)
