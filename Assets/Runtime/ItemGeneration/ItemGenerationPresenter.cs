@@ -23,11 +23,11 @@ public class ItemGenerationPresenter
             Item item = _generator.CreateItem(itemSO.type, itemSO.GetStructure());
 
             Inventory caseInventory = _modelCollection.GetInventory(InventoryType.CASE);
-            caseInventory.TryAddItem(item, new Pair(i * 2, 0));
+            caseInventory.TryAddItem(item, new (i * 2, 0));
         }
     }
 
-    private void OnItemAddedToInventory(Item item, Pair position)
+    private void OnItemAddedToInventory(Item item, (int row, int col) position)
     {
         Inventory caseInventory = _modelCollection.GetInventory(InventoryType.CASE);
         if (caseInventory.IsEmpty())

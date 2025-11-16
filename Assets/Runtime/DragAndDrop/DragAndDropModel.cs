@@ -14,7 +14,7 @@ public class DragAndDropModel
 
     public InventoryType CurrentInventory { get; private set; }
 
-    public Pair CurrentPosition { get; private set; }
+    public (int row, int col) CurrentPosition { get; private set; }
 
     public DragAndDropModel(Item item)
     {
@@ -26,7 +26,7 @@ public class DragAndDropModel
         Draged?.Invoke(x, y);
     }
 
-    public void SetInventoryAndPosition(InventoryType inventory, Pair position)
+    public void SetInventoryAndPosition(InventoryType inventory, (int row, int col) position)
     {
         CurrentInventory = inventory;
         CurrentPosition = position;

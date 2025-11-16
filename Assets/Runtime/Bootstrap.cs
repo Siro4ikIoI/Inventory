@@ -32,8 +32,8 @@ public class Bootstrap : MonoBehaviour
     {
         _modelCollection = new ModelCollection();
 
-        _inventoryPresenter = CreateInventoryPresenter(InventoryType.INVENTARY, new Pair(5, 9), inventory);
-        _caseInventoryPresenter = CreateInventoryPresenter(InventoryType.CASE, new Pair(7, 4), caseInventory);
+        _inventoryPresenter = CreateInventoryPresenter(InventoryType.INVENTARY, new (5, 9), inventory);
+        _caseInventoryPresenter = CreateInventoryPresenter(InventoryType.CASE, new (7, 4), caseInventory);
 
         ItemGenerator itemGenerator = new ItemGenerator(itemSettings);
         _itemGenerationPresenter = new ItemGenerationPresenter(itemGenerator, _modelCollection);
@@ -50,12 +50,12 @@ public class Bootstrap : MonoBehaviour
         _itemGenerationPresenter.Enable();
     }
 
-    private InventoryPresenter CreateInventoryPresenter(InventoryType inventoryType, Pair inventoryShape, InventoryView inventoryView)
+    private InventoryPresenter CreateInventoryPresenter(InventoryType inventoryType, (int row, int col) inventoryShape, InventoryView inventoryView)
     {
         Inventory inventory = new Inventory(inventoryType, inventoryShape);
         _modelCollection.AddInventory(inventoryType, inventory);
 
-        inventoryView.SetShape(inventory.Shape.Row, inventory.Shape.Col);
+        inventoryView.SetShape(inventory.Shape.row, inventory.Shape.col);
         
         return new InventoryPresenter(inventory, inventoryView, _modelCollection, itemSettings);
     }

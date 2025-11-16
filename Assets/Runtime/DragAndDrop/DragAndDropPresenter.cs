@@ -22,7 +22,7 @@ public class DragAndDropPresenter
         if (_modelCollection.GetCurrentDragAndDrop() != null)
             return;
 
-        _dragAndDropModel.SetInventoryAndPosition(InventoryType.NONE, new Pair(-1, -1));
+        _dragAndDropModel.SetInventoryAndPosition(InventoryType.NONE, new (-1, -1));
 
         Inventory sourceInventory = null;
         foreach (Inventory inventory in _modelCollection.GetAllInventories())
@@ -51,7 +51,7 @@ public class DragAndDropPresenter
         RectTransform rectTransform = (RectTransform)_dragAndDropView.transform;
         rectTransform.anchoredPosition += delta / rectTransform.parent.localScale.x;
 
-        _dragAndDropModel.SetInventoryAndPosition(InventoryType.NONE, new Pair(-1, -1));
+        _dragAndDropModel.SetInventoryAndPosition(InventoryType.NONE, new (-1, -1));
 
         Vector3 worldPosition = rectTransform.position;
         _dragAndDropModel.Drag(worldPosition.x, worldPosition.y);
@@ -63,7 +63,7 @@ public class DragAndDropPresenter
             return;
 
         InventoryType inventoryType = _dragAndDropModel.CurrentInventory;
-        Pair itemPosition = _dragAndDropModel.CurrentPosition;
+        (int row, int col) itemPosition = _dragAndDropModel.CurrentPosition;
 
         if (inventoryType != InventoryType.NONE 
             && _modelCollection.GetInventory(inventoryType).CanAddItem(_dragAndDropModel.Item, itemPosition))
