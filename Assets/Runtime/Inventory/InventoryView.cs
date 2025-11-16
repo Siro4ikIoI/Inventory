@@ -3,23 +3,13 @@ using UnityEngine;
 
 public class InventoryView : MonoBehaviour
 {
-    [SerializeField] private RectTransform inventoryArea;
-    [SerializeField] private float cellSize;
-    [SerializeField] private float cellBorder;
+    [SerializeField] private RectTransform _inventoryArea;
+    [SerializeField] private float _cellSize;
+    [SerializeField] private float _cellBorder;
 
-    private RectTransform rectTransform;
     public int Row { get; private set; }
     public int Col { get; private set; }
-    private CellView[,] cells;
-
-    void Awake()
-    {
-        rectTransform = GetComponent<RectTransform>();
-        if (inventoryArea == null)
-        {
-            inventoryArea = rectTransform;
-        }
-    }
+    private CellView[,] _cells;
 
     public void SetShape(int row, int col)
     {
@@ -30,9 +20,9 @@ public class InventoryView : MonoBehaviour
 
     private void InitializeCells()
     {
-        cells = new CellView[Row, Col];
+        _cells = new CellView[Row, Col];
 
-        CellView[] existingCells = inventoryArea.GetComponentsInChildren<CellView>();
+        CellView[] existingCells = _inventoryArea.GetComponentsInChildren<CellView>();
 
         int index = 0;
         for (int i = 0; i < Row; i++)
@@ -41,18 +31,18 @@ public class InventoryView : MonoBehaviour
             {
                 if (index < existingCells.Length)
                 {
-                    cells[i, j] = existingCells[index];
+                    _cells[i, j] = existingCells[index];
                     index++;
                 }
             }
         }
     }
 
-    // Ïðîâåðÿåò, íàõîäèòñÿ ëè òî÷êà âíóòðè îáëàñòè èíâåíòàðÿ
+    // ÐŸÑ€Ð¾Ð²ÐµÑ€ÑÐµÑ‚, Ð½Ð°Ñ…Ð¾Ð´Ð¸Ñ‚ÑÑ Ð»Ð¸ Ñ‚Ð¾Ñ‡ÐºÐ° Ð²Ð½ÑƒÑ‚Ñ€Ð¸ Ð¾Ð±Ð»Ð°ÑÑ‚Ð¸ Ð¸Ð½Ð²ÐµÐ½Ñ‚Ð°Ñ€Ñ
     public bool IsPointInside(Vector2 screenPosition, Camera camera = null)
     {
         return RectTransformUtility.RectangleContainsScreenPoint(
-            inventoryArea,
+            _inventoryArea,
             screenPosition,
             camera
         );
@@ -60,17 +50,17 @@ public class InventoryView : MonoBehaviour
 
     public Vector2 GetLocalPosition(Vector2 tablePosition)
     {
-        float x = tablePosition.x * cellSize + ((2 * tablePosition.x + 1) * cellBorder);
-        float y = tablePosition.y * cellSize + ((2 * tablePosition.y + 1) * cellBorder);
+        float x = tablePosition.x * _cellSize + ((2 * tablePosition.x + 1) * _cellBorder);
+        float y = tablePosition.y * _cellSize + ((2 * tablePosition.y + 1) * _cellBorder);
 
         return new Vector2(x, y);
     }
 
-    // Ïîëó÷èòü ëîêàëüíóþ ïîçèöèþ âíóòðè èíâåíòàðÿ
+    // ÐŸÐ¾Ð»ÑƒÑ‡Ð¸Ñ‚ÑŒ Ð»Ð¾ÐºÐ°Ð»ÑŒÐ½ÑƒÑŽ Ð¿Ð¾Ð·Ð¸Ñ†Ð¸ÑŽ Ð²Ð½ÑƒÑ‚Ñ€Ð¸ Ð¸Ð½Ð²ÐµÐ½Ñ‚Ð°Ñ€Ñ
     public bool GetTablePosition(Vector2 screenPosition, out Vector2 localPosition, Camera camera = null)
     {
         bool success = RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            inventoryArea,
+            _inventoryArea,
             screenPosition,
             camera,
             out localPosition
@@ -90,16 +80,16 @@ public class InventoryView : MonoBehaviour
 
     public void HighlightCells(int[,] highlightArray)
     {
-        if (cells == null) return;
+        if (_cells == null) return;
 
         for (int i = 0; i < Row; i++)
         {
             for (int j = 0; j < Col; j++)
             {
-                if (cells[i, j] != null && highlightArray != null)
+                if (_cells[i, j] != null && highlightArray != null)
                 {
                     int state = highlightArray[i, j];
-                    cells[i, j].SetHighlight(state);
+                    _cells[i, j].SetHighlight(state);
                 }
             }
         }
@@ -107,6 +97,6 @@ public class InventoryView : MonoBehaviour
 
     public RectTransform GetContainer()
     {
-        return inventoryArea;
+        return _inventoryArea;
     }
 }

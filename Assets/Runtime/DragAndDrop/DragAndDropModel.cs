@@ -9,7 +9,7 @@ public class DragAndDropModel
 
     private Item _item;
     public Item Item { get { return _item; } }
-    
+
     public Inventory PreviousItemInventory { get; set; }
 
     public InventoryType CurrentInventory { get; private set; }

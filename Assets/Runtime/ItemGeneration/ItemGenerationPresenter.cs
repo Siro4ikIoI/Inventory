@@ -23,7 +23,7 @@ public class ItemGenerationPresenter
             Item item = _generator.CreateItem(itemSO.type, itemSO.GetStructure());
 
             Inventory caseInventory = _modelCollection.GetInventory(InventoryType.CASE);
-            caseInventory.TryAddItem(item, new (i * 2, 0));
+            caseInventory.TryAddItem(item, new(i * 2, 0));
         }
     }
 

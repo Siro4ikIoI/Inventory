@@ -11,7 +11,7 @@ public class InventoryPresenter
 
     private DragAndDropModel _dragAndDropModel;
 
-    public InventoryPresenter(Inventory inventory, InventoryView inventoryView, 
+    public InventoryPresenter(Inventory inventory, InventoryView inventoryView,
                                 ModelCollection modelCollection, ItemSettings itemSettings)
     {
         _inventory = inventory;
@@ -87,7 +87,7 @@ public class InventoryPresenter
         _inventoryView.GetTablePosition(position, out Vector2 tablePosition);
         int col = (int)tablePosition.x;
         int row = (int)(_inventory.Shape.row - tablePosition.y - 1);
-        (int row, int col) cellPosition = new (row, col);
+        (int row, int col) cellPosition = new(row, col);
 
         _dragAndDropModel.SetInventoryAndPosition(inventoryType, cellPosition);
     }

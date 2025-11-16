@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 public class Inventory
 {
@@ -56,7 +55,7 @@ public class Inventory
 
     public bool TryExtractItem(Item item, out (int row, int col) position)
     {
-        position = new (-1, -1);
+        position = new(-1, -1);
 
         if (!ContainsItem(item))
             return false;
@@ -111,7 +110,7 @@ public class Inventory
 
         new Matrix(sumArray).Reshape(Shape, out Matrix collisionMatrix, position.row, position.col);
         CollisionWhenAdding?.Invoke(collisionMatrix.GetStructure());
-        
+
         return collisionMatrix.Max() <= (int)CellType.FILL;
     }
 

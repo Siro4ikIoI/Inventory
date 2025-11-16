@@ -3,28 +3,27 @@ using UnityEngine.UI;
 
 public class ItemView : MonoBehaviour
 {
-    [SerializeField] private Image iconImage;
-    [SerializeField] private RectTransform rectTransform;
+    [SerializeField] private Image _iconImage;
+    [SerializeField] private RectTransform _rectTransform;
 
-    [SerializeField] private BlockGridView blocksWrapper;
+    [SerializeField] private BlockGridView _blocksWrapper;
 
-    [SerializeField] private DragAndDropView dragAndDrop;
-    public DragAndDropView DragAndDrop { get { return dragAndDrop; } }
+    [SerializeField] private DragAndDropView _dragAndDrop;
+    public DragAndDropView DragAndDrop { get { return _dragAndDrop; } }
 
-    // Установка позиции итема
     public void SetPosition(Vector2 position)
     {
-        rectTransform.anchoredPosition = position;
+        _rectTransform.anchoredPosition = position;
     }
 
     public Vector2 GetPosition()
     {
-        return rectTransform.anchoredPosition;
+        return _rectTransform.anchoredPosition;
     }
 
     public void SetRotation(Direction direction, int[,] blocks)
     {
-        blocksWrapper.Rotate(blocks);
-        iconImage.transform.eulerAngles = Vector3.forward * -90 * (int)direction;
+        _blocksWrapper.Rotate(blocks);
+        _iconImage.transform.eulerAngles = Vector3.forward * -90 * (int)direction;
     }
 }

@@ -49,7 +49,7 @@ public class InventoryHighlightPresenter
         Item emptyItem = new Item(-1, ItemType.GRANADE, new int[1, 1] { { 0 } });
         foreach (var inventory in _modelCollection.GetAllInventories())
         {
-            inventory.CanAddItem(emptyItem, new (0, 0));
+            inventory.CanAddItem(emptyItem, new(0, 0));
         }
     }
 
