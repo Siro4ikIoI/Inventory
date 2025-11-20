@@ -1,0 +1,71 @@
+root = true
+
+[*.cs]
+
+############################
+# Общие форматные настройки
+############################
+
+indent_style = space
+indent_size = 4
+end_of_line = crlf
+charset = utf-8
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+########################################
+# Требовать модификаторы доступа у типов
+########################################
+
+dotnet_style_require_accessibility_modifiers = always:warning
+
+###############################################
+# Имена приватных полей: _camelCase с префиксом
+###############################################
+
+# Правило именования для приватных полей
+dotnet_naming_rule.private_fields_rule.symbols = private_fields
+dotnet_naming_rule.private_fields_rule.style = private_fields_style
+dotnet_naming_rule.private_fields_rule.severity = warning
+
+# Какие символы подпадают под правило
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private
+
+# Какой стиль требуется для этих символов
+dotnet_naming_style.private_fields_style.required_prefix = _
+dotnet_naming_style.private_fields_style.capitalization = camel_case
+
+########################################
+# Локальные переменные: camelCase
+########################################
+
+# Правило для локальных переменных
+dotnet_naming_rule.local_variables_rule.symbols = local_variables
+dotnet_naming_rule.local_variables_rule.style = local_variables_style
+dotnet_naming_rule.local_variables_rule.severity = warning
+
+# Какие символы подпадают под правило
+dotnet_naming_symbols.local_variables.applicable_kinds = local
+dotnet_naming_symbols.local_variables.applicable_accessibilities = *
+
+# Какой стиль требуется для локальных переменных
+dotnet_naming_style.local_variables_style.required_prefix = 
+dotnet_naming_style.local_variables_style.capitalization = camel_case
+
+########################################
+# Методы: PascalCase
+########################################
+
+# Правило для методов
+dotnet_naming_rule.methods_rule.symbols = methods
+dotnet_naming_rule.methods_rule.style = methods_style
+dotnet_naming_rule.methods_rule.severity = warning
+
+# Какие символы подпадают под правило
+dotnet_naming_symbols.methods.applicable_kinds = method
+dotnet_naming_symbols.methods.applicable_accessibilities = *
+
+# Какой стиль требуется для методов
+dotnet_naming_style.methods_style.required_prefix = 
+dotnet_naming_style.methods_style.capitalization = pascal_case
